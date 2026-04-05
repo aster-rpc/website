@@ -10,8 +10,152 @@ import Footer from '../components/Footer.astro';
   </Header>
 
   <main>
+    <section class="section hero-section">
+      <div class="shell surface-dark pad hero-card">
+        <div class="hero-copy">
+          <div class="meta-label">Why Aster</div>
+          <h1>Address-first RPC no longer matches the systems we actually build.</h1>
+          <p>
+            Aster starts from a different assumption: peers should be reachable by identity,
+            contracts should be portable artifacts, and transport should tolerate NAT,
+            relays, movement, and mixed topologies without pretending the network is neat.
+          </p>
+        </div>
+        <div class="hero-side">
+          <div class="note-card">
+            <div class="meta-label">Core line</div>
+            <p>RPC after hostnames.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <section class="section">
+      <div class="shell surface-light-wrap">
+        <div class="surface-light pad">
+          <div class="section-head">
+            <div>
+              <div class="meta-label">What Aster is</div>
+              <h2>An identity-first distributed systems substrate.</h2>
+            </div>
+            <p>
+              Aster combines decentralised transport, cross-language serialization, and
+              language-native contracts into a composed system for services that need to
+              operate across real network conditions.
+            </p>
+          </div>
+          <div class="grid grid-3">
+            <article class="card light-card">
+              <div class="meta-label">Transport</div>
+              <h3>Identity is the connection</h3>
+              <p>Peers dial by cryptographic identity rather than assuming stable hostname and port pairs.</p>
+            </article>
+            <article class="card light-card">
+              <div class="meta-label">Contract</div>
+              <h3>Contracts have real identity</h3>
+              <p>Service meaning can be published, verified, cached, and referenced as deterministic artifacts.</p>
+            </article>
+            <article class="card light-card">
+              <div class="meta-label">Runtime</div>
+              <h3>Cross-language without flattening languages</h3>
+              <p>Each implementation should feel native while still conforming to a shared wire contract.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell surface-dark pad">
+        <div class="section-head dark">
+          <div>
+            <div class="meta-label">What Aster is optimizing for</div>
+            <h2>Reachability, portability, explicit trust, and runtime dignity.</h2>
+          </div>
+          <p>
+            The goal is not to out-market mature RPC ecosystems. It is to provide a better
+            fit for systems where connectivity is unstable, trust cannot be implicit, and
+            native developer ergonomics still matter.
+          </p>
+        </div>
+        <div class="grid grid-2">
+          <article class="card dark-card">
+            <div class="meta-label">Optimization 01</div>
+            <h3>Built for real networks</h3>
+            <p>Movement, NAT traversal, relays, and path changes are treated as normal operating conditions.</p>
+          </article>
+          <article class="card dark-card">
+            <div class="meta-label">Optimization 02</div>
+            <h3>Trust as structure</h3>
+            <p>Admission, capability issuance, and rotation are part of the system model rather than afterthoughts.</p>
+          </article>
+          <article class="card dark-card">
+            <div class="meta-label">Optimization 03</div>
+            <h3>Portable contract truth</h3>
+            <p>Contracts are durable objects that can move between runtimes and publication surfaces.</p>
+          </article>
+          <article class="card dark-card">
+            <div class="meta-label">Optimization 04</div>
+            <h3>Session-shaped interactions</h3>
+            <p>Aster leaves room for long-lived, typed interactions that better match AI and edge system behavior.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell surface-light-wrap">
+        <div class="surface-light pad">
+          <div class="section-head">
+            <div>
+              <div class="meta-label">Aster in context</div>
+              <h2>Not “gRPC but faster.” Not a blockchain product. Not a mesh rebrand.</h2>
+            </div>
+            <p>
+              Aster is greenfield and honest about that. The tradeoff is deliberate: less
+              ecosystem maturity today in exchange for a model that better fits identity-first,
+              mixed-topology distributed systems.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <Footer />
 </BaseLayout>
+
+<style>
+  .pad { padding: 26px; }
+  .hero-section { padding-top: 24px; }
+  .hero-card, .section-head, .hero-copy { display: grid; gap: 18px; }
+  .hero-card { grid-template-columns: minmax(0, 1.3fr) 260px; align-items: end; }
+  .hero-copy h1, .section-head h2 { margin: 0; letter-spacing: -0.05em; }
+  .hero-copy h1 { font-size: clamp(40px, 6vw, 74px); line-height: 0.98; color: var(--cloud-strong); max-width: 12ch; }
+  .hero-copy p, .section-head p { margin: 0; font-size: 16px; line-height: 1.6; max-width: 64ch; }
+  .hero-copy p { color: var(--mist); }
+  .section-head { grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr); margin-bottom: 22px; align-items: end; }
+  .section-head h2 { font-size: clamp(30px, 4vw, 48px); line-height: 1.02; color: var(--ink); }
+  .section-head p { color: var(--ink-soft); }
+  .section-head.dark h2 { color: var(--cloud-strong); }
+  .section-head.dark p { color: var(--mist); }
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .card { border-radius: var(--radius-lg); padding: 18px; }
+  .dark-card { border: 1px solid rgba(163, 178, 196, 0.1); background: rgba(255, 255, 255, 0.025); }
+  .light-card, .note-card { border: 1px solid rgba(25, 37, 51, 0.1); background: rgba(255, 255, 255, 0.72); }
+  .note-card { border-radius: var(--radius-lg); padding: 16px; }
+  .meta-label { margin-bottom: 10px; font-size: 11px; line-height: 1.2; letter-spacing: 0.12em; text-transform: uppercase; }
+  .card h3, .note-card p { margin: 0; }
+  .card h3 { font-size: 18px; line-height: 1.15; letter-spacing: -0.025em; }
+  .dark-card h3 { color: var(--cloud-strong); }
+  .light-card h3, .note-card p { color: var(--ink); }
+  .card p { margin: 8px 0 0; font-size: 14px; line-height: 1.5; }
+  .dark-card p { color: var(--mist); }
+  .light-card p { color: var(--ink-soft); }
+  @media (max-width: 960px) {
+    .hero-card, .section-head, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .pad { padding: 22px; }
+  }
+</style>

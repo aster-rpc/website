@@ -1,46 +1,88 @@
-# Astro Starter Kit: Basics
+# Aster website
+
+Public-facing Astro website for Aster.
+
+## Purpose
+
+This repository contains the narrative/product site for Aster, not the documentation site.
+
+- Website: brand, worldview, architecture framing, trust model, examples, status
+- Docs: quickstart, guides, concepts, reference, bindings
+
+The site should explain Aster as an identity-first distributed systems substrate with:
+
+- identity-first connectivity
+- content-addressed contracts
+- high-performance cross-language serialization
+- explicit trust and capability structure
+
+## Routes
+
+- `/`
+- `/why`
+- `/architecture`
+- `/trust`
+- `/examples`
+- `/about`
+
+## Stack
+
+- Astro 6
+- TypeScript
+- Bun for package management / scripts
+- Local Geist and IBM Plex Mono font assets
+
+## Development
+
+Install dependencies:
 
 ```sh
-bun create astro@latest -- --template basics
+bun install
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Start the dev server:
 
-## 🚀 Project Structure
+```sh
+bun dev
+```
 
-Inside of your Astro project, you'll see the following folders and files:
+Build the site:
+
+```sh
+bun build
+```
+
+Preview the production build:
+
+```sh
+bun preview
+```
+
+## Project structure
 
 ```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+src/
+  components/   Shared UI pieces
+  layouts/      Shared Astro layouts
+  pages/        Route-level authored pages
+  styles/       Global tokens and base styling
+public/
+  fonts/        Local font assets
+_private/       Source IA / spec / brand inputs
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Content guidance
 
-## 🧞 Commands
+- Keep the website distinct from docs/reference
+- Stay calm, precise, and infrastructural in tone
+- Avoid hype, blockchain cues, and generic SaaS styling
+- Prefer authored pages over premature abstraction
 
-All commands are run from the root of the project, from a terminal:
+## Source of truth
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
+Primary project context lives in:
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- `_private/WEBSITE-IA.md`
+- `_private/Aster-SPEC.md`
+- `_private/brand/aster-brand-pack.md`
+- `.clinerules/memory_bank/`

@@ -10,8 +10,108 @@ import Footer from '../components/Footer.astro';
   </Header>
 
   <main>
+    <section class="section hero-section">
+      <div class="shell surface-dark pad hero-card">
+        <div class="hero-copy">
+          <div class="meta-label">Trust</div>
+          <h1>Trust should be explicit system structure.</h1>
+          <p>
+            Aster frames trust as rooted authority, admission policy, delegated capability,
+            and routine rotation. It should feel legible to operators rather than hidden inside infrastructure folklore.
+          </p>
+        </div>
+        <div class="trust-rail">
+          <span>Root</span>
+          <span>Admission</span>
+          <span>Capability</span>
+          <span>Rotation</span>
+        </div>
+      </div>
+    </section>
 
+    <section class="section">
+      <div class="shell surface-light-wrap">
+        <div class="surface-light pad">
+          <div class="section-head">
+            <div>
+              <div class="meta-label">Trust model</div>
+              <h2>Portable trust, operator-shaped.</h2>
+            </div>
+            <p>
+              The point is not vague security language. The point is to make authority,
+              membership, and delegated action concrete enough to reason about and operate.
+            </p>
+          </div>
+          <div class="grid grid-2">
+            <article class="card light-card">
+              <div class="meta-label">Root authority</div>
+              <h3>Highest trust anchor</h3>
+              <p>An offline or carefully controlled root defines the top of the trust tree rather than outsourcing authority to ambient infrastructure.</p>
+            </article>
+            <article class="card light-card">
+              <div class="meta-label">Admission</div>
+              <h3>Explicit membership</h3>
+              <p>Producers and peers are admitted according to policy, making trust boundaries visible and reviewable.</p>
+            </article>
+            <article class="card light-card">
+              <div class="meta-label">Capability issuance</div>
+              <h3>Delegation over blanket access</h3>
+              <p>Rights can be granted with scope and intent instead of assuming every authenticated peer should do everything.</p>
+            </article>
+            <article class="card light-card">
+              <div class="meta-label">Rotation and revocation</div>
+              <h3>Normal operational behavior</h3>
+              <p>Keys, leases, and authority can change without collapsing service identity or contract continuity.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell surface-dark pad">
+        <div class="section-head dark">
+          <div>
+            <div class="meta-label">Positioning</div>
+            <h2>Serious, calm, and legible.</h2>
+          </div>
+          <p>
+            This page should communicate that Aster is not using decentralisation as a vibe.
+            Trust is presented as an auditable model for identity-first systems operating across mixed environments.
+          </p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <Footer />
 </BaseLayout>
+
+<style>
+  .pad { padding: 26px; }
+  .hero-section { padding-top: 24px; }
+  .hero-card, .section-head { display: grid; gap: 18px; }
+  .hero-card { grid-template-columns: minmax(0, 1.25fr) 240px; align-items: end; }
+  .hero-copy h1, .section-head h2 { margin: 0; letter-spacing: -0.05em; }
+  .hero-copy h1 { font-size: clamp(40px, 6vw, 72px); line-height: 0.98; color: var(--cloud-strong); max-width: 11ch; }
+  .hero-copy p, .section-head p { margin: 0; font-size: 16px; line-height: 1.6; max-width: 64ch; }
+  .hero-copy p { color: var(--mist); }
+  .section-head { grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr); margin-bottom: 22px; align-items: end; }
+  .section-head h2 { font-size: clamp(30px, 4vw, 48px); line-height: 1.02; color: var(--ink); }
+  .section-head p { color: var(--ink-soft); }
+  .section-head.dark h2 { color: var(--cloud-strong); }
+  .section-head.dark p { color: var(--mist); }
+  .trust-rail { display: grid; gap: 10px; }
+  .trust-rail span { border-radius: 999px; padding: 10px 12px; border: 1px solid rgba(230,192,107,0.22); background: rgba(230,192,107,0.08); color: var(--cloud-strong); font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card { border-radius: var(--radius-lg); padding: 18px; }
+  .light-card { border: 1px solid rgba(25, 37, 51, 0.1); background: rgba(255, 255, 255, 0.72); }
+  .meta-label { margin-bottom: 10px; font-size: 11px; line-height: 1.2; letter-spacing: 0.12em; text-transform: uppercase; }
+  .card h3 { margin: 0; font-size: 18px; line-height: 1.15; letter-spacing: -0.025em; color: var(--ink); }
+  .card p { margin: 8px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-soft); }
+  @media (max-width: 960px) {
+    .hero-card, .section-head, .grid-2 { grid-template-columns: 1fr; }
+    .pad { padding: 22px; }
+  }
+</style>

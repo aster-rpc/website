@@ -10,8 +10,129 @@ import Footer from '../components/Footer.astro';
   </Header>
 
   <main>
+    <section class="section hero-section">
+      <div class="shell surface-dark pad hero-card">
+        <div class="hero-copy">
+          <div class="meta-label">Architecture</div>
+          <h1>Composed layers, not one monolith.</h1>
+          <p>
+            Aster separates transport, serialization, and contract concerns so the system can
+            stay precise about network reality, runtime performance, and cross-language service meaning.
+          </p>
+        </div>
+        <div class="hero-side stack-card">
+          <span>Contract</span>
+          <span>Serialization</span>
+          <span>Transport</span>
+        </div>
+      </div>
+    </section>
 
+    <section class="section">
+      <div class="shell surface-light-wrap">
+        <div class="surface-light pad">
+          <div class="section-head">
+            <div>
+              <div class="meta-label">Three layers</div>
+              <h2>Transport, serialization, contract.</h2>
+            </div>
+            <p>
+              These layers are intentionally separable. The interoperability boundary lives in the
+              shared wire behavior, while each language keeps its own native developer surface.
+            </p>
+          </div>
+          <div class="stack-grid">
+            <article class="layer transport">
+              <div class="meta-label">Layer 01</div>
+              <h3>Identity-first transport</h3>
+              <p>Dial by public key, tolerate NAT traversal and relay fallback, and preserve continuity across changing paths.</p>
+            </article>
+            <article class="layer serialization">
+              <div class="meta-label">Layer 02</div>
+              <h3>Serialization modes</h3>
+              <p>Use high-performance object serialization with room for ordered or row-oriented modes where workload shape demands it.</p>
+            </article>
+            <article class="layer contract">
+              <div class="meta-label">Layer 03</div>
+              <h3>Contract identity</h3>
+              <p>Preserve service semantics as portable, deterministic artifacts that can be published and verified across runtimes.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell surface-dark pad">
+        <div class="section-head dark">
+          <div>
+            <div class="meta-label">Registry / publication</div>
+            <h2>Discovery without central infrastructure as a prerequisite.</h2>
+          </div>
+          <p>
+            Aster’s registry model is built around content-addressed contract publication,
+            sync, and endpoint capability leasing rather than assuming a permanent control plane.
+          </p>
+        </div>
+        <div class="grid grid-3">
+          <article class="card dark-card">
+            <div class="meta-label">Publication</div>
+            <h3>Contracts can be addressed directly</h3>
+            <p>Published artifacts can be cached, retrieved, and reasoned about without relying on hostname-based indirection.</p>
+          </article>
+          <article class="card dark-card">
+            <div class="meta-label">Leasing</div>
+            <h3>Endpoint access is explicit</h3>
+            <p>Capabilities shape how endpoints are exposed and consumed instead of implying blanket network trust.</p>
+          </article>
+          <article class="card dark-card">
+            <div class="meta-label">Conformance</div>
+            <h3>Shared bytes, native APIs</h3>
+            <p>Language implementations keep local dignity while converging on one interoperable protocol contract.</p>
+          </article>
+        </div>
+      </div>
+    </section>
   </main>
 
   <Footer />
 </BaseLayout>
+
+<style>
+  .pad { padding: 26px; }
+  .hero-section { padding-top: 24px; }
+  .hero-card, .section-head { display: grid; gap: 18px; }
+  .hero-card { grid-template-columns: minmax(0, 1.25fr) 260px; align-items: end; }
+  .hero-copy h1, .section-head h2 { margin: 0; letter-spacing: -0.05em; }
+  .hero-copy h1 { font-size: clamp(40px, 6vw, 72px); line-height: 0.98; color: var(--cloud-strong); max-width: 10ch; }
+  .hero-copy p, .section-head p { margin: 0; font-size: 16px; line-height: 1.6; max-width: 64ch; }
+  .hero-copy p { color: var(--mist); }
+  .section-head { grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr); margin-bottom: 22px; align-items: end; }
+  .section-head h2 { font-size: clamp(30px, 4vw, 48px); line-height: 1.02; color: var(--ink); }
+  .section-head p { color: var(--ink-soft); }
+  .section-head.dark h2 { color: var(--cloud-strong); }
+  .section-head.dark p { color: var(--mist); }
+  .stack-card { display: grid; gap: 10px; }
+  .stack-card span, .layer { border-radius: var(--radius-lg); padding: 16px 18px; }
+  .stack-card span { background: rgba(255,255,255,0.06); border: 1px solid rgba(163,178,196,0.12); color: var(--cloud-strong); }
+  .grid, .stack-grid { display: grid; gap: 16px; }
+  .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .stack-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .card { border-radius: var(--radius-lg); padding: 18px; }
+  .dark-card { border: 1px solid rgba(163, 178, 196, 0.1); background: rgba(255, 255, 255, 0.025); }
+  .layer { border: 1px solid rgba(25, 37, 51, 0.1); background: rgba(255, 255, 255, 0.72); }
+  .layer.transport { box-shadow: inset 4px 0 0 var(--signal); }
+  .layer.serialization { box-shadow: inset 4px 0 0 var(--relay); }
+  .layer.contract { box-shadow: inset 4px 0 0 var(--trust); }
+  .meta-label { margin-bottom: 10px; font-size: 11px; line-height: 1.2; letter-spacing: 0.12em; text-transform: uppercase; }
+  .card h3, .layer h3 { margin: 0; font-size: 18px; line-height: 1.15; letter-spacing: -0.025em; }
+  .dark-card h3 { color: var(--cloud-strong); }
+  .layer h3 { color: var(--ink); }
+  .card p, .layer p { margin: 8px 0 0; font-size: 14px; line-height: 1.5; }
+  .dark-card p { color: var(--mist); }
+  .layer p { color: var(--ink-soft); }
+  @media (max-width: 960px) {
+    .hero-card, .section-head, .grid-3, .stack-grid { grid-template-columns: 1fr; }
+    .pad { padding: 22px; }
+  }
+</style>
