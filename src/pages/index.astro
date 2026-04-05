@@ -1,11 +1,184 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import BrandMark from '../components/BrandMark.astro';
+import Hero from '../components/Hero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import Footer from '../components/Footer.astro';
 ---
+<BaseLayout>
+  <Header>
+    <BrandMark slot="mark" />
+  </Header>
 
-<Layout>
-	<Welcome />
-</Layout>
+  <main>
+    <Hero />
+
+    <section class="section" id="why">
+      <div class="shell surface-dark pad">
+        <SectionIntro
+          kicker="The old assumptions are broken"
+          title="RPC cannot keep pretending the network is stable, central, and addressable."
+          copy="Hostname-first, infra-first, static-network RPC no longer matches edge, AI, NAT-heavy, or operator-sovereign systems. Aster starts from cryptographic identity, portable contracts, and transport that works across real-world paths."
+        />
+        <div class="grid grid-3 dark-grid">
+          <article class="card dark-card">
+            <div class="meta-label">Assumption 01</div>
+            <h3>Addresses are durable</h3>
+            <p>In practice, endpoints move, hide behind NAT, depend on relays, and appear from mixed environments that do not resemble neat datacenter topologies.</p>
+          </article>
+          <article class="card dark-card">
+            <div class="meta-label">Assumption 02</div>
+            <h3>Trust can be bolted on</h3>
+            <p>Aster treats identity, admission, and capability issuance as system primitives rather than post-hoc middleware or sidecar policy.</p>
+          </article>
+          <article class="card dark-card">
+            <div class="meta-label">Assumption 03</div>
+            <h3>Services are just stateless calls</h3>
+            <p>Modern AI and edge systems need long-lived, typed, session-shaped interactions. The protocol surface should acknowledge that directly.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="shell surface-light-wrap">
+        <div class="surface-light pad">
+          <SectionIntro
+            kicker="Three layers, one system"
+            title="Transport / Serialization / Contract"
+            copy="This is the architectural center of gravity: the transport layer speaks to network reality, the serialization layer speaks to runtime performance and portability, and the contract layer preserves service meaning across languages."
+            light={true}
+          />
+          <div class="diagram">
+            <div class="layer-stack">
+              <div class="layer transport">
+                <div class="meta-label">Layer 01</div>
+                <h3>Transport</h3>
+                <p>Identity-first connectivity over decentralised transport. Assume NAT traversal, relays, movement, and non-ideal topologies as normal conditions.</p>
+              </div>
+              <div class="layer serialization">
+                <div class="meta-label">Layer 02</div>
+                <h3>Serialization</h3>
+                <p>High-performance, cross-language serialization as a first-class systems concern, with room for ROW mode where data-heavy workloads benefit.</p>
+              </div>
+              <div class="layer contract">
+                <div class="meta-label">Layer 03</div>
+                <h3>Contract</h3>
+                <p>Portable, deterministic service contracts with real identity, suitable for publication, verification, caching, and stable interop across runtimes.</p>
+              </div>
+            </div>
+            <aside class="diagram-side">
+              <span class="protocol-chip"><i></i> protocol paper lens</span>
+              <div class="stack-graphic">
+                <div class="stack-bar contract">Contract</div>
+                <div class="stack-bar serialization">Serialization</div>
+                <div class="stack-bar transport">Transport</div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="trust">
+      <div class="shell surface-light-wrap">
+        <div class="surface-light pad">
+          <SectionIntro
+            kicker="Trust model"
+            title="Root authority, admission, capability issuance, rotation."
+            copy="Aster should present trust as explicit system structure: operator-defined roots, policy-shaped admission, delegated capabilities, and the ability to rotate without undermining contract or peer identity."
+            light={true}
+          />
+          <div class="grid grid-2 light-grid">
+            <article class="card light-card">
+              <div class="meta-label">Trust primitives</div>
+              <h3>Portable trust, not invisible middleware</h3>
+              <ul>
+                <li>Offline root authority as the highest trust anchor.</li>
+                <li>Explicit producer admission and mesh membership.</li>
+                <li>Capability issuance rather than implied blanket trust.</li>
+                <li>Rotation and revocation as normal operational behavior.</li>
+              </ul>
+            </article>
+            <article class="card light-card">
+              <div class="meta-label">Brand posture</div>
+              <h3>Serious, calm, operator-respecting</h3>
+              <p>This is where Aster differentiates itself from vague decentralisation language. The tone should remain precise and quiet, signaling a system built for sovereignty and control rather than novelty.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .pad { padding: 26px; }
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .card { border-radius: var(--radius-lg); padding: 18px; }
+  .dark-card { border: 1px solid rgba(163, 178, 196, 0.1); background: rgba(255, 255, 255, 0.025); }
+  .light-card { border: 1px solid rgba(25, 37, 51, 0.1); background: rgba(255, 255, 255, 0.62); }
+  .meta-label {
+    margin-bottom: 10px; font-size: 11px; line-height: 1.2; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .card h3 {
+    margin: 0; font-size: 18px; line-height: 1.15; letter-spacing: -0.025em;
+  }
+  .dark-card h3 { color: var(--cloud-strong); }
+  .light-card h3 { color: var(--ink); }
+  .card p, .card li { margin: 8px 0 0; font-size: 14px; line-height: 1.5; }
+  .dark-card p { color: var(--mist); }
+  .light-card p, .light-card li { color: var(--ink-soft); }
+  .light-card ul { padding-left: 18px; margin: 14px 0 0; }
+
+  .diagram { display: grid; grid-template-columns: 1fr 300px; gap: 18px; align-items: stretch; }
+  .layer-stack { display: grid; gap: 14px; }
+  .layer {
+    position: relative; border-radius: 22px; padding: 18px 18px 18px 22px;
+    border: 1px solid rgba(25, 37, 51, 0.1); background: rgba(255, 255, 255, 0.72); overflow: hidden;
+  }
+  .layer::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: var(--signal); }
+  .layer.transport::before { background: var(--signal); }
+  .layer.serialization::before { background: var(--relay); }
+  .layer.contract::before { background: var(--trust); }
+  .layer h3 { margin: 0; font-size: 22px; letter-spacing: -0.03em; color: var(--ink); }
+  .layer p { margin: 8px 0 0; font-size: 14px; color: var(--ink-soft); }
+
+  .diagram-side {
+    border-radius: 24px; border: 1px solid rgba(25, 37, 51, 0.1);
+    background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(241,246,251,0.92));
+    padding: 18px; display: grid; gap: 14px; align-content: start;
+  }
+  .protocol-chip {
+    display: inline-flex; align-items: center; gap: 8px; align-self: start;
+    border-radius: 999px; padding: 8px 10px; border: 1px solid rgba(25, 37, 51, 0.12);
+    background: rgba(255,255,255,0.82); font-family: var(--mono); font-size: 11px; letter-spacing: .06em;
+    color: #42505E; text-transform: uppercase;
+  }
+  .protocol-chip i {
+    width: 7px; height: 7px; border-radius: 50%; display: inline-block; background: var(--signal);
+  }
+  .stack-graphic {
+    border-radius: 18px; border: 1px dashed rgba(25, 37, 51, 0.14);
+    padding: 16px; display: grid; gap: 10px; background: rgba(255,255,255,0.55);
+  }
+  .stack-bar {
+    border-radius: 12px; padding: 12px 14px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink);
+  }
+  .stack-bar.transport { background: rgba(120, 166, 255, 0.16); }
+  .stack-bar.serialization { background: rgba(97, 214, 194, 0.18); }
+  .stack-bar.contract { background: rgba(230, 192, 107, 0.18); }
+
+  @media (max-width: 1100px) {
+    .diagram { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .pad { padding: 22px; }
+  }
+</style>

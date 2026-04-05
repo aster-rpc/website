@@ -1,0 +1,16 @@
+---
+interface Props {
+  kicker: string;
+  title: string;
+  copy: string;
+  light?: boolean;
+}
+const { kicker, title, copy, light = false } = Astro.props;
+---
+<div class={`section-intro ${light ? 'light' : ''}`}>
+  <div>
+    <div class="section-kicker">{kicker}</div>
+    <h2>{title}</h2>
+  </div>
+  <p>{copy}</p>
+</div>
