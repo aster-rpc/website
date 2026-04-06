@@ -3,6 +3,94 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import BrandMark from '../components/BrandMark.astro';
 import Footer from '../components/Footer.astro';
+
+const ex1 = `from aster import service, rpc
+from aster.codec import wire_type
+from aster.types import SerializationMode
+from dataclasses import dataclass
+
+@wire_type("hello/Req")
+@dataclass
+class HelloReq:
+    name: str = ""
+
+@wire_type("hello/Resp")
+@dataclass
+class HelloResp:
+    greeting: str = ""
+
+@service(name="Hello", version=1,
+         serialization=[SerializationMode.XLANG])
+class HelloService:
+    @rpc(timeout=10.0, idempotent=True)
+    async def greet(self, req: HelloReq) -> HelloResp:
+        return HelloResp(greeting=f"hello, {req.name}")
+
+# Call it
+resp = await client.greet(HelloReq(name="world"))`;
+
+const ex2 = `from aster import service, server_stream
+from typing import AsyncIterator
+
+@service(name="Counter", version=1,
+         serialization=[SerializationMode.XLANG])
+class CounterService:
+
+    @server_stream
+    async def count(self, req: CountReq
+    ) -> AsyncIterator[CountItem]:
+        for i in range(req.count):
+            yield CountItem(value=req.start + i)
+
+# Consume the stream
+async for item in client.count(CountReq(start=0, count=5)):
+    print(item.value)`;
+
+const ex3 = `from aster import service, rpc
+from aster.session import create_local_session
+
+@service(name="Accumulator", version=1,
+         scoped="stream")
+class AccumulatorService:
+    def __init__(self, peer=None):
+        self.peer = peer
+        self.total = 0
+
+    @rpc
+    async def add(self, req: Req) -> Resp:
+        self.total += req.value
+        return Resp(result=self.total)
+
+    def on_session_close(self):
+        pass  # cleanup hook
+
+# State persists across calls within one session
+session = create_local_session(AccumulatorService)
+await session.add(Req(value=10))  # total: 10
+await session.add(Req(value=5))   # total: 15`;
+
+const ex4 = `from aster.trust import (
+    generate_root_keypair,
+    EnrollmentCredential,
+    sign_credential,
+    MeshEndpointHook,
+)
+import time
+
+# Generate offline root key
+priv, pub = generate_root_keypair()
+
+# Sign an enrollment credential
+cred = EnrollmentCredential(
+    endpoint_id="producer-01",
+    root_pubkey=pub,
+    expires_at=int(time.time()) + 3600,
+    attributes={"role": "worker"},
+)
+cred.signature = sign_credential(cred, priv)
+
+# Hook enforces admission at QUIC ALPN layer
+hook = MeshEndpointHook(root_pubkey=pub)`;
 ---
 <BaseLayout>
   <Header>
@@ -12,39 +100,59 @@ import Footer from '../components/Footer.astro';
   <main>
     <section class="section hero-section">
       <div class="shell surface-dark pad hero-card">
-        <div>
+        <div class="hero-copy">
           <div class="meta-label">Examples</div>
-          <h1>Examples chosen to show why the model matters.</h1>
-          <p>
-            These are not generic demo apps. They are workload shapes where identity-first
-            connectivity, portable contracts, or session-scoped interaction change the design.
+          <h1 class="page-hero-title">Real code from the Python reference implementation.</h1>
+          <p class="page-copy">
+            These examples use the actual Aster Python API. Each one isolates a pattern where
+            identity-first connectivity, streaming, sessions, or trust changes the design
+            compared to conventional RPC.
           </p>
         </div>
+        <aside class="hero-note">
+          <div class="meta-label">Status</div>
+          <p>All examples run against the 0.1-alpha Python implementation today.</p>
+        </aside>
       </div>
     </section>
 
     <section class="section">
-      <div class="shell grid grid-2">
-        <article class="card surface-light light-card">
-          <div class="meta-label">Python first</div>
-          <h2>Python service mesh without address-first assumptions</h2>
-          <p>Expose Python services behind NAT using cryptographic identity and contract publication rather than fixed ingress infrastructure.</p>
-        </article>
-        <article class="card surface-light light-card">
-          <div class="meta-label">Architecture example</div>
-          <h2>Mixed topology control plane</h2>
-          <p>Coordinate services across operator networks, relays, and moving nodes while preserving explicit trust boundaries.</p>
-        </article>
-        <article class="card surface-light light-card">
-          <div class="meta-label">Row-mode example</div>
-          <h2>Data-heavy transfer path</h2>
-          <p>Use serialization modes appropriate for structured, high-volume payloads without flattening the rest of the service model.</p>
-        </article>
-        <article class="card surface-light light-card">
-          <div class="meta-label">Session-scoped example</div>
-          <h2>Long-lived typed interaction</h2>
-          <p>Model agent or edge sessions as first-class streams instead of forcing everything into isolated request/response calls.</p>
-        </article>
+      <div class="shell surface-light-wrap">
+        <div class="surface-light pad examples-panel">
+          <div class="section-head">
+            <div>
+              <div class="meta-label">Python API</div>
+              <h2 class="page-section-title">Define services with decorators. Connect by identity. Stream, accumulate, converse.</h2>
+            </div>
+            <p class="page-copy">
+              These examples use the real Aster Python API. Each focuses on a distinct
+              interaction pattern: unary RPC, streaming, session-scoped state, and trust enrollment.
+            </p>
+          </div>
+
+          <div class="grid grid-2">
+            <article class="card light-card example-card">
+              <div class="meta-label">Example 01 &middot; Unary RPC</div>
+              <h2 class="page-card-title">Define a service, call it</h2>
+              <pre class="code-block"><code>{ex1}</code></pre>
+            </article>
+            <article class="card light-card example-card">
+              <div class="meta-label">Example 02 &middot; Server streaming</div>
+              <h2 class="page-card-title">Yield items from a single request</h2>
+              <pre class="code-block"><code>{ex2}</code></pre>
+            </article>
+            <article class="card light-card example-card">
+              <div class="meta-label">Example 03 &middot; Session-scoped service</div>
+              <h2 class="page-card-title">Stateful across sequential calls</h2>
+              <pre class="code-block"><code>{ex3}</code></pre>
+            </article>
+            <article class="card light-card example-card">
+              <div class="meta-label">Example 04 &middot; Trust enrollment</div>
+              <h2 class="page-card-title">Root key, credentials, admission</h2>
+              <pre class="code-block"><code>{ex4}</code></pre>
+            </article>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -55,17 +163,37 @@ import Footer from '../components/Footer.astro';
 <style>
   .pad { padding: 26px; }
   .hero-section { padding-top: 24px; }
-  .hero-card h1 { margin: 0; font-size: clamp(38px, 6vw, 68px); line-height: 0.98; letter-spacing: -0.05em; color: var(--cloud-strong); max-width: 11ch; }
-  .hero-card p { margin: 14px 0 0; max-width: 62ch; color: var(--mist); font-size: 16px; }
+  .hero-card, .section-head { display: grid; gap: 18px; }
+  .hero-card { grid-template-columns: minmax(0, 1.25fr) 260px; align-items: end; }
+  .hero-card h1 { max-width: 11ch; color: var(--cloud-strong); }
+  .hero-card p { margin-top: 14px; max-width: 62ch; color: var(--mist); }
+  .hero-note {
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    border: 1px solid rgba(163, 178, 196, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .hero-note p { margin-top: 0; max-width: 24ch; }
+  .examples-panel { display: grid; gap: 24px; }
+  .section-head { grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr); align-items: end; }
+  .section-head p { color: var(--ink-soft); }
   .grid { display: grid; gap: 16px; }
   .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .card { border-radius: var(--radius-lg); padding: 22px; }
-  .light-card { border: 1px solid rgba(25, 37, 51, 0.1); }
+  .light-card { border: 1px solid rgba(25, 37, 51, 0.1); background: rgba(255, 255, 255, 0.62); }
+  .example-card { display: grid; gap: 10px; align-content: start; }
   .meta-label { margin-bottom: 10px; font-size: 11px; line-height: 1.2; letter-spacing: 0.12em; text-transform: uppercase; }
-  .card h2 { margin: 0; color: var(--ink); font-size: 24px; line-height: 1.08; letter-spacing: -0.04em; }
-  .card p { margin: 10px 0 0; color: var(--ink-soft); font-size: 14px; line-height: 1.55; }
+  .card h2 { color: var(--ink); }
+  .card p { color: var(--ink-soft); }
+  .code-block {
+    margin: 12px 0 0; padding: 14px; border-radius: 12px;
+    background: var(--slate-900); color: var(--cloud);
+    font-family: var(--mono); font-size: 12px; line-height: 1.55;
+    overflow-x: auto; white-space: pre; border: 1px solid rgba(163, 178, 196, 0.1);
+  }
+  .code-block code { font-family: inherit; font-size: inherit; }
   @media (max-width: 900px) {
-    .grid-2 { grid-template-columns: 1fr; }
+    .hero-card, .section-head, .grid-2 { grid-template-columns: 1fr; }
     .pad { padding: 22px; }
   }
 </style>

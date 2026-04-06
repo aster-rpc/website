@@ -4,11 +4,11 @@
       <div class="eyebrow">Identity-first distributed systems substrate</div>
       <h1>Aster</h1>
       <div class="hero-tagline">RPC after hostnames.</div>
-      <p class="hero-copy">Identity-first connectivity, content-addressed contracts, and cross-language services for real distributed systems.</p>
-      <p class="hero-subhead">Built for AI, edge, and multi-runtime systems that cannot assume static addresses, central control planes, or bolt-on trust.</p>
+      <p class="hero-copy">Aster replaces address-first RPC with ed25519 identity, content-addressed contracts, and high-performance cross-language serialization. Connect by who a peer is, not where it lives.</p>
+      <p class="hero-subhead">Built on iroh QUIC with NAT traversal and relay fallback, Apache Fory serialization, and language-native service definitions. No DNS. No load balancers. No generated code.</p>
       <div class="hero-actions">
         <a class="button primary" href="/architecture">Explore the stack</a>
-        <a class="button secondary" href="https://docs.aster.site">Read the docs</a>
+        <a class="button secondary" href="https://github.com/aster-rpc">View on GitHub</a>
       </div>
     </div>
 
@@ -30,24 +30,24 @@
       <div class="panel-body">
         <div class="mini-grid">
           <div class="mini-card">
-            <div class="meta-label">Connection model</div>
-            <strong>Identity-first transport</strong>
-            <p>Dial by who a peer is, not where it happens to live.</p>
+            <div class="meta-label">Transport</div>
+            <strong>iroh QUIC + ed25519</strong>
+            <p>Peer-to-peer with hole-punching, relay fallback, no hostname required.</p>
           </div>
           <div class="mini-card">
-            <div class="meta-label">Contract model</div>
-            <strong>Content-addressed truth</strong>
-            <p>Portable, deterministic contracts with real identity.</p>
+            <div class="meta-label">Serialization</div>
+            <strong>Apache Fory</strong>
+            <p>XLANG, NATIVE, and ROW modes. 10-170x faster than protobuf.</p>
           </div>
           <div class="mini-card">
-            <div class="meta-label">Registry model</div>
-            <strong>Decentralised publication</strong>
-            <p>Discovery without assuming a single control plane.</p>
+            <div class="meta-label">Contract</div>
+            <strong>BLAKE3 content-addressed</strong>
+            <p>Language-native decorators, deterministic contract identity.</p>
           </div>
           <div class="mini-card">
-            <div class="meta-label">Interaction model</div>
-            <strong>Session-scoped services</strong>
-            <p>First-class support for stateful, conversational flows.</p>
+            <div class="meta-label">Trust</div>
+            <strong>Four-gate authorization</strong>
+            <p>Offline root key, enrollment credentials, no external auth infra.</p>
           </div>
         </div>
       </div>

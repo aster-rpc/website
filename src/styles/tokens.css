@@ -162,6 +162,42 @@ img, svg { display: block; max-width: 100%; }
 }
 .surface-light .section-intro p { color: var(--ink-soft); }
 
+.page-hero-title,
+.page-section-title {
+  margin: 0;
+  letter-spacing: -0.05em;
+}
+
+.page-hero-title {
+  font-size: clamp(42px, 5.4vw, 72px);
+  line-height: 0.98;
+}
+
+.page-section-title {
+  font-size: clamp(32px, 4vw, 50px);
+  line-height: 1.02;
+}
+
+.page-copy {
+  margin: 0;
+  font-size: clamp(17px, 1.45vw, 19px);
+  line-height: 1.65;
+  max-width: 64ch;
+}
+
+.page-card-title {
+  margin: 0;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+.page-card-copy {
+  margin: 10px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
 @media (max-width: 1100px) {
   .section-intro { grid-template-columns: 1fr; }
 }

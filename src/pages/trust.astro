@@ -14,17 +14,18 @@ import Footer from '../components/Footer.astro';
       <div class="shell surface-dark pad hero-card">
         <div class="hero-copy">
           <div class="meta-label">Trust</div>
-          <h1>Trust should be explicit system structure.</h1>
-          <p>
-            Aster frames trust as rooted authority, admission policy, delegated capability,
-            and routine rotation. It should feel legible to operators rather than hidden inside infrastructure folklore.
+          <h1 class="page-hero-title">Trust as explicit system structure.</h1>
+          <p class="page-copy">
+            Aster implements a four-gate authorization model built on ed25519 cryptography.
+            No external auth infrastructure. No certificate authority. No OAuth sidecar.
+            Trust is operator-defined, credential-scoped, and auditable at every gate.
           </p>
         </div>
         <div class="trust-rail">
-          <span>Root</span>
-          <span>Admission</span>
-          <span>Capability</span>
-          <span>Rotation</span>
+          <span>Gate 0 · Connection</span>
+          <span>Gate 1 · Admission</span>
+          <span>Gate 2 · Service</span>
+          <span>Gate 3 · Method</span>
         </div>
       </div>
     </section>
@@ -35,33 +36,35 @@ import Footer from '../components/Footer.astro';
           <div class="section-head">
             <div>
               <div class="meta-label">Trust model</div>
-              <h2>Portable trust, operator-shaped.</h2>
+               <h2 class="page-section-title">Portable trust, operator-shaped.</h2>
             </div>
-            <p>
-              The point is not vague security language. The point is to make authority,
-              membership, and delegated action concrete enough to reason about and operate.
+             <p class="page-copy">
+              Every trust decision is concrete and auditable. The root authority signs enrollment
+              credentials. Admission is enforced at the QUIC ALPN layer. Capabilities are scoped
+              to services and methods. Credentials carry expiry and can be rotated without
+              breaking contract or peer identity.
             </p>
           </div>
           <div class="grid grid-2">
             <article class="card light-card">
               <div class="meta-label">Root authority</div>
-              <h3>Highest trust anchor</h3>
-              <p>An offline or carefully controlled root defines the top of the trust tree rather than outsourcing authority to ambient infrastructure.</p>
+               <h3 class="page-card-title">Offline ed25519 root key</h3>
+               <p class="page-card-copy">The root key is generated offline (<code>generate_root_keypair()</code>) and never needs to be present at runtime. It signs enrollment credentials that carry the root public key, expiry, endpoint scope, and custom attributes.</p>
             </article>
             <article class="card light-card">
               <div class="meta-label">Admission</div>
-              <h3>Explicit membership</h3>
-              <p>Producers and peers are admitted according to policy, making trust boundaries visible and reviewable.</p>
+               <h3 class="page-card-title">Producer and consumer enrollment</h3>
+               <p class="page-card-copy">Producers present signed <code>EnrollmentCredential</code> objects. Consumers use either reusable policy credentials or single-use one-time-token nonces (<code>ConsumerEnrollmentCredential</code>). The <code>MeshEndpointHook</code> enforces admission at the QUIC ALPN layer.</p>
             </article>
             <article class="card light-card">
-              <div class="meta-label">Capability issuance</div>
-              <h3>Delegation over blanket access</h3>
-              <p>Rights can be granted with scope and intent instead of assuming every authenticated peer should do everything.</p>
+              <div class="meta-label">Four-gate model</div>
+               <h3 class="page-card-title">Connection, admission, service, method</h3>
+               <p class="page-card-copy">Gate 0 validates the QUIC connection. Gate 1 checks enrollment credentials with signature and expiry verification. Gate 2 authorizes service-level access. Gate 3 applies method-level capability constraints. Each gate can be independently configured.</p>
             </article>
             <article class="card light-card">
-              <div class="meta-label">Rotation and revocation</div>
-              <h3>Normal operational behavior</h3>
-              <p>Keys, leases, and authority can change without collapsing service identity or contract continuity.</p>
+              <div class="meta-label">Dev mode</div>
+               <h3 class="page-card-title">Local transport bypasses trust</h3>
+               <p class="page-card-copy">When using <code>LocalTransport</code> for development, <code>CallContext.peer</code> is <code>None</code> and all gates pass. The same service code enforces full authorization in production without changes. Credential rotation and revocation are normal operational behaviour.</p>
             </article>
           </div>
         </div>
@@ -72,12 +75,15 @@ import Footer from '../components/Footer.astro';
       <div class="shell surface-dark pad">
         <div class="section-head dark">
           <div>
-            <div class="meta-label">Positioning</div>
-            <h2>Serious, calm, and legible.</h2>
+            <div class="meta-label">Credential lifecycle</div>
+             <h2 class="page-section-title">Signed, scoped, expiring, rotatable.</h2>
           </div>
-          <p>
-            This page should communicate that Aster is not using decentralisation as a vibe.
-            Trust is presented as an auditable model for identity-first systems operating across mixed environments.
+           <p class="page-copy">
+            Every credential is an ed25519-signed object with explicit expiry, endpoint scope, and
+            custom attributes. Nonce stores prevent replay. The canonical signing format is deterministic
+            JSON. Keys, leases, and authority can rotate without breaking contract identity or peer
+            relationships. This is not decentralisation as a vibe. It is an auditable trust model
+            for systems operating across mixed environments.
           </p>
         </div>
       </div>
@@ -92,12 +98,9 @@ import Footer from '../components/Footer.astro';
   .hero-section { padding-top: 24px; }
   .hero-card, .section-head { display: grid; gap: 18px; }
   .hero-card { grid-template-columns: minmax(0, 1.25fr) 240px; align-items: end; }
-  .hero-copy h1, .section-head h2 { margin: 0; letter-spacing: -0.05em; }
-  .hero-copy h1 { font-size: clamp(40px, 6vw, 72px); line-height: 0.98; color: var(--cloud-strong); max-width: 11ch; }
-  .hero-copy p, .section-head p { margin: 0; font-size: 16px; line-height: 1.6; max-width: 64ch; }
+  .hero-copy h1 { max-width: 11ch; }
   .hero-copy p { color: var(--mist); }
   .section-head { grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr); margin-bottom: 22px; align-items: end; }
-  .section-head h2 { font-size: clamp(30px, 4vw, 48px); line-height: 1.02; color: var(--ink); }
   .section-head p { color: var(--ink-soft); }
   .section-head.dark h2 { color: var(--cloud-strong); }
   .section-head.dark p { color: var(--mist); }
@@ -108,8 +111,8 @@ import Footer from '../components/Footer.astro';
   .card { border-radius: var(--radius-lg); padding: 18px; }
   .light-card { border: 1px solid rgba(25, 37, 51, 0.1); background: rgba(255, 255, 255, 0.72); }
   .meta-label { margin-bottom: 10px; font-size: 11px; line-height: 1.2; letter-spacing: 0.12em; text-transform: uppercase; }
-  .card h3 { margin: 0; font-size: 18px; line-height: 1.15; letter-spacing: -0.025em; color: var(--ink); }
-  .card p { margin: 8px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-soft); }
+  .card h3 { color: var(--ink); }
+  .card p { color: var(--ink-soft); }
   @media (max-width: 960px) {
     .hero-card, .section-head, .grid-2 { grid-template-columns: 1fr; }
     .pad { padding: 22px; }

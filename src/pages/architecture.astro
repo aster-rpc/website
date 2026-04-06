@@ -14,10 +14,11 @@ import Footer from '../components/Footer.astro';
       <div class="shell surface-dark pad hero-card">
         <div class="hero-copy">
           <div class="meta-label">Architecture</div>
-          <h1>Composed layers, not one monolith.</h1>
-          <p>
-            Aster separates transport, serialization, and contract concerns so the system can
-            stay precise about network reality, runtime performance, and cross-language service meaning.
+          <h1 class="page-hero-title">Composed layers, not one monolith.</h1>
+          <p class="page-copy">
+            Aster separates transport, serialization, and contract into three independent layers.
+            Each can be reasoned about, tested, and replaced without collapsing the others.
+            The interoperability boundary lives in the shared wire behaviour.
           </p>
         </div>
         <div class="hero-side stack-card">
@@ -34,28 +35,29 @@ import Footer from '../components/Footer.astro';
           <div class="section-head">
             <div>
               <div class="meta-label">Three layers</div>
-              <h2>Transport, serialization, contract.</h2>
+               <h2 class="page-section-title">Transport, serialization, contract.</h2>
             </div>
-            <p>
-              These layers are intentionally separable. The interoperability boundary lives in the
-              shared wire behavior, while each language keeps its own native developer surface.
+             <p class="page-copy">
+              Each layer solves one concern cleanly. The wire protocol defines the interoperability
+              boundary. Language implementations keep their own native surface: Python uses decorators,
+              Rust will use traits, JVM will use annotations.
             </p>
           </div>
           <div class="stack-grid">
             <article class="layer transport">
               <div class="meta-label">Layer 01</div>
-              <h3>Identity-first transport</h3>
-              <p>Dial by public key, tolerate NAT traversal and relay fallback, and preserve continuity across changing paths.</p>
+               <h3 class="page-card-title">iroh QUIC transport</h3>
+               <p class="page-card-copy">Dial peers by ed25519 public key. iroh provides NAT traversal via hole-punching, relay fallback when direct paths fail, and multiplexed QUIC streams. Connection identity is cryptographic, not DNS-based. The transport layer handles path migration transparently.</p>
             </article>
             <article class="layer serialization">
               <div class="meta-label">Layer 02</div>
-              <h3>Serialization modes</h3>
-              <p>Use high-performance object serialization with room for ordered or row-oriented modes where workload shape demands it.</p>
+               <h3 class="page-card-title">Apache Fory serialization</h3>
+               <p class="page-card-copy">Three modes for different workload shapes. XLANG mode for cross-language interop (Python, Rust, JVM, Go). NATIVE mode for single-language maximum throughput. ROW mode for zero-copy columnar access on data-heavy payloads. 10-170x faster than protobuf in Fory benchmarks.</p>
             </article>
             <article class="layer contract">
               <div class="meta-label">Layer 03</div>
-              <h3>Contract identity</h3>
-              <p>Preserve service semantics as portable, deterministic artifacts that can be published and verified across runtimes.</p>
+               <h3 class="page-card-title">Language-native contract identity</h3>
+               <p class="page-card-copy">Services are defined with language-native decorators (<code>@service</code>, <code>@rpc</code>, <code>@server_stream</code>). Contract identity is a BLAKE3 hash of the canonical form: deterministic, content-addressed, stable across languages. No IDL compiler, no generated stubs.</p>
             </article>
           </div>
         </div>
@@ -67,28 +69,29 @@ import Footer from '../components/Footer.astro';
         <div class="section-head dark">
           <div>
             <div class="meta-label">Registry / publication</div>
-            <h2>Discovery without central infrastructure as a prerequisite.</h2>
+             <h2 class="page-section-title">Discovery without central infrastructure.</h2>
           </div>
-          <p>
-            Aster’s registry model is built around content-addressed contract publication,
-            sync, and endpoint capability leasing rather than assuming a permanent control plane.
+           <p class="page-copy">
+            The Aster registry is built on iroh-docs (CRDT documents), iroh-blobs (content-addressed
+            storage), and iroh-gossip (pub-sub). Contract manifests are published as content-addressed
+            artifacts. Endpoint capabilities are leased, not assumed. No central control plane required.
           </p>
         </div>
         <div class="grid grid-3">
           <article class="card dark-card">
             <div class="meta-label">Publication</div>
-            <h3>Contracts can be addressed directly</h3>
-            <p>Published artifacts can be cached, retrieved, and reasoned about without relying on hostname-based indirection.</p>
+             <h3 class="page-card-title">Content-addressed contract artifacts</h3>
+             <p class="page-card-copy">Contract manifests are published to iroh-blobs with their BLAKE3 hash as the retrieval key. Any peer can fetch, verify, and cache a contract without trusting a central registry.</p>
           </article>
           <article class="card dark-card">
             <div class="meta-label">Leasing</div>
-            <h3>Endpoint access is explicit</h3>
-            <p>Capabilities shape how endpoints are exposed and consumed instead of implying blanket network trust.</p>
+             <h3 class="page-card-title">Capability-scoped endpoint access</h3>
+             <p class="page-card-copy">Endpoints advertise capabilities with ACL-controlled publishing. Access is leased with expiry rather than granted as blanket network trust.</p>
           </article>
           <article class="card dark-card">
             <div class="meta-label">Conformance</div>
-            <h3>Shared bytes, native APIs</h3>
-            <p>Language implementations keep local dignity while converging on one interoperable protocol contract.</p>
+             <h3 class="page-card-title">One wire protocol, native APIs everywhere</h3>
+             <p class="page-card-copy">Python, Rust, JVM, Go, and .NET implementations converge on the same framing, the same contract_id, and the same wire bytes. Each language keeps its own idiomatic surface.</p>
           </article>
         </div>
       </div>
@@ -103,12 +106,9 @@ import Footer from '../components/Footer.astro';
   .hero-section { padding-top: 24px; }
   .hero-card, .section-head { display: grid; gap: 18px; }
   .hero-card { grid-template-columns: minmax(0, 1.25fr) 260px; align-items: end; }
-  .hero-copy h1, .section-head h2 { margin: 0; letter-spacing: -0.05em; }
-  .hero-copy h1 { font-size: clamp(40px, 6vw, 72px); line-height: 0.98; color: var(--cloud-strong); max-width: 10ch; }
-  .hero-copy p, .section-head p { margin: 0; font-size: 16px; line-height: 1.6; max-width: 64ch; }
+  .hero-copy h1 { max-width: 10ch; }
   .hero-copy p { color: var(--mist); }
   .section-head { grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr); margin-bottom: 22px; align-items: end; }
-  .section-head h2 { font-size: clamp(30px, 4vw, 48px); line-height: 1.02; color: var(--ink); }
   .section-head p { color: var(--ink-soft); }
   .section-head.dark h2 { color: var(--cloud-strong); }
   .section-head.dark p { color: var(--mist); }
@@ -125,10 +125,9 @@ import Footer from '../components/Footer.astro';
   .layer.serialization { box-shadow: inset 4px 0 0 var(--relay); }
   .layer.contract { box-shadow: inset 4px 0 0 var(--trust); }
   .meta-label { margin-bottom: 10px; font-size: 11px; line-height: 1.2; letter-spacing: 0.12em; text-transform: uppercase; }
-  .card h3, .layer h3 { margin: 0; font-size: 18px; line-height: 1.15; letter-spacing: -0.025em; }
+  .card h3, .layer h3 { margin: 0; }
   .dark-card h3 { color: var(--cloud-strong); }
   .layer h3 { color: var(--ink); }
-  .card p, .layer p { margin: 8px 0 0; font-size: 14px; line-height: 1.5; }
   .dark-card p { color: var(--mist); }
   .layer p { color: var(--ink-soft); }
   @media (max-width: 960px) {

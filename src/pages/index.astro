@@ -18,24 +18,24 @@ import Footer from '../components/Footer.astro';
       <div class="shell surface-dark pad">
         <SectionIntro
           kicker="The old assumptions are broken"
-          title="RPC cannot keep pretending the network is stable, central, and addressable."
-          copy="Hostname-first, infra-first, static-network RPC no longer matches edge, AI, NAT-heavy, or operator-sovereign systems. Aster starts from cryptographic identity, portable contracts, and transport that works across real-world paths."
+          title="Infrastructure changed. RPC largely did not."
+          copy="Most RPC systems still assume stable addresses, central control planes, and transport that behaves like a datacenter diagram. Aster starts from a different premise: peers move, networks are adversarial, identities matter, and contracts should be portable artifacts rather than incidental files."
         />
         <div class="grid grid-3 dark-grid">
           <article class="card dark-card">
             <div class="meta-label">Assumption 01</div>
-            <h3>Addresses are durable</h3>
-            <p>In practice, endpoints move, hide behind NAT, depend on relays, and appear from mixed environments that do not resemble neat datacenter topologies.</p>
+            <h3>Address-first networking</h3>
+            <p>Endpoints move, hide behind NAT, traverse relays, and appear from environments that do not resemble datacenter topologies. Aster dials by ed25519 public key over iroh QUIC, with hole-punching and relay fallback as normal conditions.</p>
           </article>
           <article class="card dark-card">
             <div class="meta-label">Assumption 02</div>
-            <h3>Trust can be bolted on</h3>
-            <p>Aster treats identity, admission, and capability issuance as system primitives rather than post-hoc middleware or sidecar policy.</p>
+            <h3>Infrastructure-first trust</h3>
+            <p>Conventional RPC defers trust to sidecars and middleware. Aster embeds a four-gate authorization model directly: connection admission, service access, method-level capability, and enrollment credentials with expiry. The root key stays offline.</p>
           </article>
           <article class="card dark-card">
             <div class="meta-label">Assumption 03</div>
-            <h3>Services are just stateless calls</h3>
-            <p>Modern AI and edge systems need long-lived, typed, session-shaped interactions. The protocol surface should acknowledge that directly.</p>
+            <h3>Code-generation-first contracts</h3>
+            <p>Aster defines services with language-native decorators: <code>@service</code>, <code>@rpc</code>, <code>@server_stream</code>. Contract identity is a BLAKE3 hash of the canonical form. No IDL, no codegen step, no separate schema language.</p>
           </article>
         </div>
       </div>
@@ -47,25 +47,25 @@ import Footer from '../components/Footer.astro';
           <SectionIntro
             kicker="Three layers, one system"
             title="Transport / Serialization / Contract"
-            copy="This is the architectural center of gravity: the transport layer speaks to network reality, the serialization layer speaks to runtime performance and portability, and the contract layer preserves service meaning across languages."
+            copy="Each layer is intentionally separable. iroh QUIC handles identity and connectivity. Apache Fory handles cross-language serialization at native speed. The contract layer preserves service meaning as content-addressed artifacts."
             light={true}
           />
           <div class="diagram">
             <div class="layer-stack">
               <div class="layer transport">
                 <div class="meta-label">Layer 01</div>
-                <h3>Transport</h3>
-                <p>Identity-first connectivity over decentralised transport. Assume NAT traversal, relays, movement, and non-ideal topologies as normal conditions.</p>
+                <h3>Transport — iroh QUIC</h3>
+                <p>Dial peers by ed25519 public key. iroh handles NAT traversal via hole-punching with relay fallback, multiplexed QUIC streams, and connection continuity across network changes. No DNS, no load balancers, no static endpoints.</p>
               </div>
               <div class="layer serialization">
                 <div class="meta-label">Layer 02</div>
-                <h3>Serialization</h3>
-                <p>High-performance, cross-language serialization as a first-class systems concern, with room for ROW mode where data-heavy workloads benefit.</p>
+                <h3>Serialization — Apache Fory</h3>
+                <p>Three modes tuned to workload shape. XLANG for cross-language interop, NATIVE for single-language maximum throughput, ROW for zero-copy columnar access. 10-170x faster than protobuf in Fory benchmarks.</p>
               </div>
               <div class="layer contract">
                 <div class="meta-label">Layer 03</div>
-                <h3>Contract</h3>
-                <p>Portable, deterministic service contracts with real identity, suitable for publication, verification, caching, and stable interop across runtimes.</p>
+                <h3>Contract — language-native</h3>
+                <p>Define services with Python decorators, not a separate IDL. Contract identity is a BLAKE3 hash of the canonical form, stable across languages. Publish, verify, and discover contracts via the decentralised registry on iroh-docs.</p>
               </div>
             </div>
             <aside class="diagram-side">
@@ -86,8 +86,8 @@ import Footer from '../components/Footer.astro';
         <div class="surface-light pad">
           <SectionIntro
             kicker="Trust model"
-            title="Root authority, admission, capability issuance, rotation."
-            copy="Aster should present trust as explicit system structure: operator-defined roots, policy-shaped admission, delegated capabilities, and the ability to rotate without undermining contract or peer identity."
+            title="Four gates. Offline root. No external auth infrastructure."
+            copy="Aster's trust model is a four-gate authorization sequence: Gate 0 (connection), Gate 1 (admission), Gate 2 (service access), Gate 3 (method-level capability). The root authority is an offline ed25519 key. Enrollment credentials carry expiry and scope. No OAuth provider, no certificate authority, no sidecar."
             light={true}
           />
           <div class="grid grid-2 light-grid">
@@ -95,16 +95,16 @@ import Footer from '../components/Footer.astro';
               <div class="meta-label">Trust primitives</div>
               <h3>Portable trust, not invisible middleware</h3>
               <ul>
-                <li>Offline root authority as the highest trust anchor.</li>
-                <li>Explicit producer admission and mesh membership.</li>
-                <li>Capability issuance rather than implied blanket trust.</li>
-                <li>Rotation and revocation as normal operational behavior.</li>
+                <li>Offline ed25519 root key as the highest trust anchor.</li>
+                <li>Producer enrollment with signed credentials and expiry.</li>
+                <li>Consumer admission via policy or one-time-token nonces.</li>
+                <li>Mesh endpoint hooks enforce admission at the QUIC ALPN layer.</li>
               </ul>
             </article>
             <article class="card light-card">
-              <div class="meta-label">Brand posture</div>
-              <h3>Serious, calm, operator-respecting</h3>
-              <p>This is where Aster differentiates itself from vague decentralisation language. The tone should remain precise and quiet, signaling a system built for sovereignty and control rather than novelty.</p>
+              <div class="meta-label">Developer mode</div>
+              <h3>Trust that scales from laptop to production</h3>
+              <p>In development, trust checks are bypassed for local transport — <code>CallContext.peer</code> is <code>None</code>, all gates pass. In production, the same code enforces full four-gate authorization with credential verification, nonce consumption, and key rotation.</p>
             </article>
           </div>
         </div>

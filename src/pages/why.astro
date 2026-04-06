@@ -14,17 +14,18 @@ import Footer from '../components/Footer.astro';
       <div class="shell surface-dark pad hero-card">
         <div class="hero-copy">
           <div class="meta-label">Why Aster</div>
-          <h1>Address-first RPC no longer matches the systems we actually build.</h1>
-          <p>
-            Aster starts from a different assumption: peers should be reachable by identity,
-            contracts should be portable artifacts, and transport should tolerate NAT,
-            relays, movement, and mixed topologies without pretending the network is neat.
+          <h1 class="page-hero-title">Address-first RPC no longer matches the systems we actually build.</h1>
+          <p class="page-copy">
+            gRPC assumes stable hostnames, central load balancers, and trust delegated to infrastructure.
+            That model breaks in edge deployments, NAT-heavy environments, mobile topologies, and
+            multi-runtime AI systems. Aster starts from cryptographic identity, portable contracts,
+            and transport that tolerates real-world paths.
           </p>
         </div>
         <div class="hero-side">
           <div class="note-card">
-            <div class="meta-label">Core line</div>
-            <p>RPC after hostnames.</p>
+            <div class="meta-label">Core thesis</div>
+            <p>Identities matter more than addresses. Contracts are portable artifacts. Services operate across real-world networks.</p>
           </div>
         </div>
       </div>
@@ -36,29 +37,29 @@ import Footer from '../components/Footer.astro';
           <div class="section-head">
             <div>
               <div class="meta-label">What Aster is</div>
-              <h2>An identity-first distributed systems substrate.</h2>
+               <h2 class="page-section-title">An identity-first distributed systems substrate.</h2>
             </div>
-            <p>
-              Aster combines decentralised transport, cross-language serialization, and
-              language-native contracts into a composed system for services that need to
-              operate across real network conditions.
+             <p class="page-copy">
+              Aster composes three independent layers into one coherent system: iroh QUIC for
+              identity-first transport, Apache Fory for high-performance cross-language
+              serialization, and language-native contracts with content-addressed identity.
             </p>
           </div>
           <div class="grid grid-3">
             <article class="card light-card">
               <div class="meta-label">Transport</div>
-              <h3>Identity is the connection</h3>
-              <p>Peers dial by cryptographic identity rather than assuming stable hostname and port pairs.</p>
+               <h3 class="page-card-title">Identity is the connection</h3>
+               <p class="page-card-copy">Peers dial by ed25519 public key over iroh QUIC. NAT traversal via hole-punching with relay fallback. No hostname, no port, no DNS.</p>
             </article>
             <article class="card light-card">
               <div class="meta-label">Contract</div>
-              <h3>Contracts have real identity</h3>
-              <p>Service meaning can be published, verified, cached, and referenced as deterministic artifacts.</p>
+               <h3 class="page-card-title">Contracts have real identity</h3>
+               <p class="page-card-copy">Each service contract has a BLAKE3 content hash. The same <code>contract_id</code> resolves to the same interface across every language runtime.</p>
             </article>
             <article class="card light-card">
               <div class="meta-label">Runtime</div>
-              <h3>Cross-language without flattening languages</h3>
-              <p>Each implementation should feel native while still conforming to a shared wire contract.</p>
+               <h3 class="page-card-title">Cross-language without flattening languages</h3>
+               <p class="page-card-copy">Python uses <code>@service</code> and <code>@rpc</code> decorators. Rust, JVM, Go, and .NET will use their own native idioms. Same wire protocol, same contract_id.</p>
             </article>
           </div>
         </div>
@@ -70,34 +71,34 @@ import Footer from '../components/Footer.astro';
         <div class="section-head dark">
           <div>
             <div class="meta-label">What Aster is optimizing for</div>
-            <h2>Reachability, portability, explicit trust, and runtime dignity.</h2>
+             <h2 class="page-section-title">Reachability, portability, explicit trust, and runtime dignity.</h2>
           </div>
-          <p>
-            The goal is not to out-market mature RPC ecosystems. It is to provide a better
-            fit for systems where connectivity is unstable, trust cannot be implicit, and
-            native developer ergonomics still matter.
+           <p class="page-copy">
+            Aster is not competing with gRPC on ecosystem maturity. It provides a better
+            foundation for systems where peers move, trust cannot be implicit, sessions are
+            stateful, and the network does not behave like a datacenter diagram.
           </p>
         </div>
         <div class="grid grid-2">
           <article class="card dark-card">
             <div class="meta-label">Optimization 01</div>
-            <h3>Built for real networks</h3>
-            <p>Movement, NAT traversal, relays, and path changes are treated as normal operating conditions.</p>
+             <h3 class="page-card-title">Built for real networks</h3>
+             <p class="page-card-copy">iroh QUIC handles hole-punching, relay fallback, and connection continuity across IP changes. No ingress controller, no service mesh sidecar, no static addressing.</p>
           </article>
           <article class="card dark-card">
             <div class="meta-label">Optimization 02</div>
-            <h3>Trust as structure</h3>
-            <p>Admission, capability issuance, and rotation are part of the system model rather than afterthoughts.</p>
+             <h3 class="page-card-title">Trust as structure</h3>
+             <p class="page-card-copy">Four-gate authorization: connection, admission, service, method. Offline root key signs enrollment credentials with expiry. Consumer admission via policy or one-time-token. No external auth provider required.</p>
           </article>
           <article class="card dark-card">
             <div class="meta-label">Optimization 03</div>
-            <h3>Portable contract truth</h3>
-            <p>Contracts are durable objects that can move between runtimes and publication surfaces.</p>
+             <h3 class="page-card-title">Portable contract truth</h3>
+             <p class="page-card-copy">Contracts are BLAKE3-hashed artifacts published to a decentralised registry built on iroh-docs, iroh-blobs, and iroh-gossip. The same contract_id means the same interface everywhere.</p>
           </article>
           <article class="card dark-card">
             <div class="meta-label">Optimization 04</div>
-            <h3>Session-shaped interactions</h3>
-            <p>Aster leaves room for long-lived, typed interactions that better match AI and edge system behavior.</p>
+             <h3 class="page-card-title">Session-shaped interactions</h3>
+             <p class="page-card-copy">Session-scoped services (<code>scoped='stream'</code>) maintain state across sequential calls within a single QUIC stream. In-band cancellation. All four streaming patterns: unary, server, client, bidirectional.</p>
           </article>
         </div>
       </div>
@@ -109,12 +110,13 @@ import Footer from '../components/Footer.astro';
           <div class="section-head">
             <div>
               <div class="meta-label">Aster in context</div>
-              <h2>Not “gRPC but faster.” Not a blockchain product. Not a mesh rebrand.</h2>
+               <h2 class=”page-section-title”>Not “gRPC but faster.” Not a blockchain product. Not a mesh rebrand.</h2>
             </div>
-            <p>
-              Aster is greenfield and honest about that. The tradeoff is deliberate: less
-              ecosystem maturity today in exchange for a model that better fits identity-first,
-              mixed-topology distributed systems.
+             <p class=”page-copy”>
+              Aster is greenfield and honest about that. It is pre-release (0.1-alpha), Python-first,
+              and deliberately early. The tradeoff is intentional: less ecosystem maturity today
+              in exchange for a model that better fits identity-first, mixed-topology distributed
+              systems where trust, mobility, and cross-language interop are structural concerns.
             </p>
           </div>
         </div>
@@ -130,12 +132,9 @@ import Footer from '../components/Footer.astro';
   .hero-section { padding-top: 24px; }
   .hero-card, .section-head, .hero-copy { display: grid; gap: 18px; }
   .hero-card { grid-template-columns: minmax(0, 1.3fr) 260px; align-items: end; }
-  .hero-copy h1, .section-head h2 { margin: 0; letter-spacing: -0.05em; }
-  .hero-copy h1 { font-size: clamp(40px, 6vw, 74px); line-height: 0.98; color: var(--cloud-strong); max-width: 12ch; }
-  .hero-copy p, .section-head p { margin: 0; font-size: 16px; line-height: 1.6; max-width: 64ch; }
+  .hero-copy h1, .section-head h2 { max-width: 12ch; }
   .hero-copy p { color: var(--mist); }
   .section-head { grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr); margin-bottom: 22px; align-items: end; }
-  .section-head h2 { font-size: clamp(30px, 4vw, 48px); line-height: 1.02; color: var(--ink); }
   .section-head p { color: var(--ink-soft); }
   .section-head.dark h2 { color: var(--cloud-strong); }
   .section-head.dark p { color: var(--mist); }
@@ -148,10 +147,8 @@ import Footer from '../components/Footer.astro';
   .note-card { border-radius: var(--radius-lg); padding: 16px; }
   .meta-label { margin-bottom: 10px; font-size: 11px; line-height: 1.2; letter-spacing: 0.12em; text-transform: uppercase; }
   .card h3, .note-card p { margin: 0; }
-  .card h3 { font-size: 18px; line-height: 1.15; letter-spacing: -0.025em; }
   .dark-card h3 { color: var(--cloud-strong); }
   .light-card h3, .note-card p { color: var(--ink); }
-  .card p { margin: 8px 0 0; font-size: 14px; line-height: 1.5; }
   .dark-card p { color: var(--mist); }
   .light-card p { color: var(--ink-soft); }
   @media (max-width: 960px) {

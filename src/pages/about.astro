@@ -14,10 +14,11 @@ import Footer from '../components/Footer.astro';
       <div class="shell surface-dark pad hero-card">
         <div>
           <div class="meta-label">About</div>
-          <h1>Current status, direction, and where to go next.</h1>
-          <p>
-            Aster is a greenfield systems project. The current emphasis is Python-first
-            implementation, specification clarity, and a path toward cross-runtime interoperability.
+          <h1 class="page-hero-title">Pre-release. Python first. Building toward cross-runtime.</h1>
+          <p class="page-copy">
+            Aster is at version 0.1-alpha. The Python reference implementation is the primary
+            development surface. The architecture, trust model, contract identity system, and
+            wire protocol are implemented and tested. Cross-language runtimes are the next phase.
           </p>
         </div>
       </div>
@@ -26,19 +27,19 @@ import Footer from '../components/Footer.astro';
     <section class="section">
       <div class="shell grid grid-3">
         <article class="card surface-light light-card">
-          <div class="meta-label">Status</div>
-          <h2>Design phase, active implementation</h2>
-          <p>The architecture and trust model are already coherent enough to explain publicly, while the ecosystem remains early.</p>
+          <div class="meta-label">Current status</div>
+           <h2 class="page-card-title">0.1-alpha — implemented and tested</h2>
+           <p class="page-card-copy">Core RPC (unary, server streaming, client streaming, bidirectional streaming). Session-scoped services with state persistence. Four-gate trust model with enrollment credentials. BLAKE3 contract identity. Decentralised registry on iroh-docs/blobs/gossip. Apache Fory XLANG serialization. Wire-protocol conformance tests.</p>
         </article>
         <article class="card surface-light light-card">
           <div class="meta-label">Today</div>
-          <h2>Python first</h2>
-          <p>Python is the exemplar implementation and the first place where the system surface is being proven in practice.</p>
+           <h2 class="page-card-title">Python reference implementation</h2>
+           <p class="page-card-copy">The <code>aster</code> Python package (published as <code>aster-python</code>) is built with PyO3 over a Rust core. iroh QUIC transport, Apache Fory codec, language-native decorators (<code>@service</code>, <code>@rpc</code>, <code>@server_stream</code>). Async/await throughout. Tests run with pytest-asyncio.</p>
         </article>
         <article class="card surface-light light-card">
-          <div class="meta-label">Direction</div>
-          <h2>Cross-runtime by design</h2>
-          <p>Rust, JVM, .NET, Go, and JavaScript/TypeScript follow the shared protocol and conformance direction.</p>
+          <div class="meta-label">What comes next</div>
+           <h2 class="page-card-title">More languages, CLI tools, production hardening</h2>
+           <p class="page-card-copy">Rust and JVM bindings using the same wire protocol and contract_id. Go and .NET follow. CLI tools for key management, contract publication, and registry interaction. Production hardening of the trust and session lifecycle. Performance profiling across serialization modes.</p>
         </article>
       </div>
     </section>
@@ -47,7 +48,7 @@ import Footer from '../components/Footer.astro';
       <div class="shell surface-dark pad link-card">
         <div>
           <div class="meta-label">Next stops</div>
-          <h2>Read the spec. Check implementation status. Go to docs.</h2>
+           <h2 class="page-section-title">Read the spec. Explore the code. Check the docs.</h2>
         </div>
         <div class="links">
           <a href="https://docs.aster.site">Docs</a>
@@ -64,18 +65,17 @@ import Footer from '../components/Footer.astro';
 <style>
   .pad { padding: 26px; }
   .hero-section { padding-top: 24px; }
-  .hero-card h1, .link-card h2 { margin: 0; letter-spacing: -0.05em; }
-  .hero-card h1 { font-size: clamp(38px, 6vw, 68px); line-height: 0.98; color: var(--cloud-strong); max-width: 11ch; }
-  .hero-card p { margin: 14px 0 0; max-width: 62ch; color: var(--mist); font-size: 16px; }
+  .hero-card h1 { max-width: 11ch; color: var(--cloud-strong); }
+  .hero-card p { margin-top: 14px; max-width: 62ch; color: var(--mist); }
   .grid { display: grid; gap: 16px; }
   .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .card { border-radius: var(--radius-lg); padding: 22px; }
   .light-card { border: 1px solid rgba(25, 37, 51, 0.1); }
   .meta-label { margin-bottom: 10px; font-size: 11px; line-height: 1.2; letter-spacing: 0.12em; text-transform: uppercase; }
-  .card h2, .link-card h2 { color: var(--ink); font-size: 24px; line-height: 1.08; }
-  .card p { margin: 10px 0 0; color: var(--ink-soft); font-size: 14px; line-height: 1.55; }
+  .card h2, .link-card h2 { color: var(--ink); }
+  .card p { color: var(--ink-soft); }
   .link-card { display: grid; gap: 18px; }
-  .link-card h2 { color: var(--cloud-strong); font-size: clamp(28px, 4vw, 44px); }
+  .link-card h2 { color: var(--cloud-strong); }
   .links { display: flex; flex-wrap: wrap; gap: 12px; }
   .links a { border-radius: 999px; padding: 12px 14px; border: 1px solid var(--border-dark); color: var(--cloud-strong); background: rgba(255,255,255,0.03); }
   @media (max-width: 900px) {
