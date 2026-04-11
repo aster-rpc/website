@@ -40,7 +40,7 @@ import Footer from '../components/Footer.astro';
              <p class="page-copy">
               Each layer solves one concern cleanly. The wire protocol defines the interoperability
               boundary. Language implementations keep their own native surface: Python uses decorators,
-              Rust will use traits, JVM will use annotations.
+              TypeScript uses decorators, JVM languages use annotations, and other bindings follow their own idioms.
             </p>
           </div>
           <div class="stack-grid">
@@ -52,7 +52,7 @@ import Footer from '../components/Footer.astro';
             <article class="layer serialization">
               <div class="meta-label">Layer 02</div>
                <h3 class="page-card-title">Apache Fory serialization</h3>
-               <p class="page-card-copy">Three modes for different workload shapes. XLANG mode for cross-language interop (Python, Rust, JVM, Go). NATIVE mode for single-language maximum throughput. ROW mode for zero-copy columnar access on data-heavy payloads. 10-170x faster than protobuf in Fory benchmarks.</p>
+               <p class="page-card-copy">Three modes for different workload shapes. XLANG mode for cross-language interop across supported bindings. NATIVE mode for single-language maximum throughput. ROW mode for zero-copy columnar access on data-heavy payloads. 10-170x faster than protobuf in Fory benchmarks.</p>
             </article>
             <article class="layer contract">
               <div class="meta-label">Layer 03</div>
@@ -91,7 +91,7 @@ import Footer from '../components/Footer.astro';
           <article class="card dark-card">
             <div class="meta-label">Conformance</div>
              <h3 class="page-card-title">One wire protocol, native APIs everywhere</h3>
-             <p class="page-card-copy">Python, Rust, JVM, Go, and .NET implementations converge on the same framing, the same contract_id, and the same wire bytes. Each language keeps its own idiomatic surface.</p>
+             <p class="page-card-copy">Python and TypeScript are first-class alpha bindings today. Java, .NET, Kotlin, and Go are in progress; Rust is planned. Each language keeps its own idiomatic surface while converging on the same wire framing and contract identity.</p>
           </article>
         </div>
       </div>

@@ -1,0 +1,402 @@
+---
+import TerminalCast from './TerminalCast.astro';
+
+const languages = [
+  { label: 'Python', tag: 'Py', state: 'Alpha', tone: 'alpha' },
+  { label: 'TypeScript', tag: 'TS', state: 'Alpha', tone: 'alpha' },
+  { label: 'Java', tag: 'Jv', state: 'In progress', tone: 'progress' },
+  { label: '.NET', tag: '.N', state: 'In progress', tone: 'progress' },
+  { label: 'Kotlin', tag: 'Kt', state: 'In progress', tone: 'progress' },
+  { label: 'Go', tag: 'Go', state: 'In progress', tone: 'progress' },
+  { label: 'Rust', tag: 'Rs', state: 'Planned', tone: 'planned' },
+];
+
+const walkthroughSteps = [
+  'Typed services',
+  'Streaming calls',
+  'Session state',
+  'Scoped credentials',
+  'Cross-language calls',
+];
+---
+
+<section class="terminal-hero">
+  <div class="shell terminal-hero-grid">
+    <div class="terminal-hero-copy">
+      <div class="eyebrow">Identity-first distributed systems substrate</div>
+      <h1>Aster</h1>
+      <div class="hero-tagline">Focus on services and access, not network ceremony.</div>
+      <p class="hero-copy">
+        Define typed services in code. Broker access for machines and AI agents.
+        Call across languages and real networks without proto files, pod-networking
+        spelunking, load balancers, or certificate infrastructure.
+      </p>
+      <p class="hero-subhead">
+        Endpoints prove their own identity. Owners sign who gets in and what
+        they can call. The transport works out how to reach the machine.
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href="https://docs.aster.site/docs/quickstart/mission-control">Build Mission Control</a>
+        <a class="button secondary" href="/architecture">Explore the stack</a>
+      </div>
+    </div>
+
+    <div class="terminal-hero-visual">
+      <TerminalCast
+        className="terminal-stage--hero"
+        castPath="/casts/demo-polished.cast"
+        title="aster / typed service"
+        status="live peer"
+      />
+    </div>
+  </div>
+
+  <div class="shell mission-strip" aria-label="Mission Control walkthrough">
+    <div class="mission-strip__copy">
+      <span class="meta-label">Day 0 walkthrough</span>
+      <p>Build one real service path, then take the deeper detail in the docs.</p>
+    </div>
+    <div class="mission-steps">
+      {walkthroughSteps.map((step, index) => (
+        <span><i>{String(index + 1).padStart(2, '0')}</i>{step}</span>
+      ))}
+    </div>
+  </div>
+
+  <div class="shell terminal-language-strip" aria-label="Language support">
+    <div class="language-strip-copy">
+      <span class="meta-label">Language support</span>
+      <p>Python and TypeScript are first-class in alpha. Java, .NET, Kotlin, and Go are in progress. Rust is planned.</p>
+    </div>
+    <div class="language-grid">
+      {languages.map((language) => (
+        <div class={`language-badge language-badge--${language.tone}`}>
+          <span class="language-badge__mark">{language.tag}</span>
+          <span class="language-badge__copy">
+            <strong>{language.label}</strong>
+            <small>{language.state}</small>
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .terminal-hero {
+    position: relative;
+    min-height: calc(100svh - 78px);
+    display: grid;
+    align-items: center;
+    padding: clamp(56px, 7vw, 96px) 0 clamp(42px, 6vw, 72px);
+    overflow: hidden;
+  }
+
+  .terminal-hero::before {
+    content: "";
+    position: absolute;
+    inset: auto -8vw 10vh;
+    height: 34rem;
+    background:
+      linear-gradient(90deg, rgba(120, 166, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(rgba(120, 166, 255, 0.08) 1px, transparent 1px);
+    background-size: 58px 58px;
+    mask-image: radial-gradient(ellipse at 72% 55%, #000 0%, transparent 66%);
+    pointer-events: none;
+  }
+
+  .terminal-hero::after {
+    content: "";
+    position: absolute;
+    inset: 8% auto auto 6%;
+    width: 24rem;
+    height: 24rem;
+    border-radius: 999px;
+    background: rgba(97, 214, 194, 0.08);
+    filter: blur(74px);
+    pointer-events: none;
+  }
+
+  .terminal-hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.82fr) minmax(0, 1.18fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+  }
+
+  .terminal-hero-copy {
+    max-width: 35rem;
+  }
+
+  .eyebrow,
+  .meta-label {
+    font-size: 11px;
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mist-2);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(76px, 12vw, 146px);
+    line-height: 0.82;
+    font-weight: 730;
+    letter-spacing: -0.088em;
+    color: var(--cloud-strong);
+  }
+
+  .hero-tagline {
+    max-width: 11ch;
+    margin-top: 22px;
+    color: var(--signal);
+    font-weight: 650;
+    letter-spacing: -0.055em;
+    font-size: clamp(34px, 4.4vw, 64px);
+    line-height: 0.94;
+    text-wrap: balance;
+  }
+
+  .hero-copy {
+    margin-top: 24px;
+    max-width: 34rem;
+    color: var(--cloud);
+    font-size: clamp(19px, 2vw, 23px);
+    line-height: 1.42;
+    letter-spacing: -0.025em;
+  }
+
+  .hero-subhead {
+    margin-top: 18px;
+    max-width: 34rem;
+    color: var(--mist);
+    font-size: 16px;
+    line-height: 1.62;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  .hero-actions .primary {
+    min-width: 198px;
+  }
+
+  .terminal-hero-visual {
+    position: relative;
+  }
+
+  .terminal-hero-visual::before {
+    content: "";
+    position: absolute;
+    inset: 12% -8% -8% 8%;
+    border-radius: 40px;
+    background:
+      radial-gradient(circle at 70% 12%, rgba(230, 192, 107, 0.12), transparent 24%),
+      linear-gradient(135deg, rgba(120, 166, 255, 0.12), transparent 42%);
+    filter: blur(28px);
+    opacity: 0.8;
+  }
+
+  :global(.terminal-stage--hero) {
+    min-height: clamp(35rem, 54vw, 42rem);
+    transform: rotate(-1deg);
+  }
+
+  .terminal-language-strip {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(16rem, 0.55fr) minmax(0, 1.45fr);
+    gap: 24px;
+    align-items: center;
+    margin-top: 18px;
+  }
+
+  .mission-strip {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(16rem, 0.55fr) minmax(0, 1.45fr);
+    gap: 24px;
+    align-items: center;
+    margin-top: clamp(34px, 5vw, 68px);
+    padding: 16px;
+    border: 1px solid rgba(163, 178, 196, 0.1);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.024);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  }
+
+  .mission-strip__copy p {
+    margin: 8px 0 0;
+    color: var(--mist);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .mission-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .mission-steps span {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 42px;
+    padding: 0 12px;
+    border: 1px solid rgba(120, 166, 255, 0.14);
+    border-radius: 999px;
+    background: rgba(11, 15, 20, 0.42);
+    color: var(--cloud);
+    font-size: 13px;
+    font-weight: 620;
+  }
+
+  .mission-steps i {
+    color: var(--relay);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-style: normal;
+    letter-spacing: 0.08em;
+  }
+
+  .language-strip-copy p {
+    margin: 8px 0 0;
+    color: var(--mist);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .language-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .language-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 68px;
+    padding: 11px 12px;
+    border: 1px solid rgba(163, 178, 196, 0.11);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.032);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  }
+
+  .language-badge:nth-child(n + 5) {
+    transform: translateX(calc(50% + 5px));
+  }
+
+  .language-badge__mark {
+    display: inline-grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 auto;
+    border-radius: 13px;
+    border: 1px solid rgba(163, 178, 196, 0.14);
+    background: rgba(11, 15, 20, 0.74);
+    color: var(--cloud-strong);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 650;
+  }
+
+  .language-badge__copy {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .language-badge__copy strong {
+    color: var(--cloud-strong);
+    font-size: 14px;
+    line-height: 1.1;
+  }
+
+  .language-badge__copy small {
+    color: var(--mist-2);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .language-badge--alpha {
+    border-color: rgba(97, 214, 194, 0.18);
+  }
+
+  .language-badge--alpha .language-badge__mark {
+    color: var(--relay);
+  }
+
+  .language-badge--alpha .language-badge__copy small {
+    color: var(--relay);
+  }
+
+  .language-badge--progress {
+    border-color: rgba(120, 166, 255, 0.18);
+  }
+
+  .language-badge--progress .language-badge__mark,
+  .language-badge--progress .language-badge__copy small {
+    color: var(--signal);
+  }
+
+  @media (max-width: 1100px) {
+    .terminal-hero {
+      min-height: auto;
+    }
+
+    .terminal-hero-grid,
+    .mission-strip,
+    .terminal-language-strip {
+      grid-template-columns: 1fr;
+    }
+
+    .terminal-hero-copy {
+      max-width: 43rem;
+    }
+
+    :global(.terminal-stage--hero) {
+      min-height: 34rem;
+      transform: none;
+    }
+
+    .language-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .language-badge:nth-child(n + 5) {
+      transform: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .terminal-hero {
+      padding-top: 46px;
+    }
+
+    h1 {
+      font-size: clamp(68px, 24vw, 108px);
+    }
+
+    .hero-tagline {
+      max-width: 12ch;
+    }
+
+    .language-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

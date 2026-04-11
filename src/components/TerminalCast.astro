@@ -1,0 +1,542 @@
+---
+interface TerminalLine {
+  text: string;
+  tone: string;
+  suffix?: string;
+}
+
+interface Props {
+  castPath?: string;
+  title?: string;
+  status?: string;
+  className?: string;
+}
+
+const {
+  castPath = '/casts/demo-polished.cast',
+  title = 'aster / typed service',
+  status = 'live peer',
+  className = '',
+} = Astro.props;
+
+const fallbackLines: TerminalLine[] = [
+  { text: 'Aster RPC - encrypted P2P calls, any language', tone: 'hero' },
+  { text: '# server.py - 12 lines, that is the whole service', tone: 'comment' },
+  { text: '@service(name="Fleet", version=1)', tone: 'schema' },
+  { text: 'class Fleet:', tone: 'code' },
+  { text: '    @rpc()', tone: 'schema' },
+  { text: '    async def status(self, req) -> StatusResponse:', tone: 'code' },
+  { text: '        return StatusResponse(hostname=platform.node(), ...)', tone: 'code' },
+  { text: '# Start it', tone: 'comment' },
+  { text: '$ python server.py', tone: 'prompt' },
+  { text: 'aster14Y5xCM3ErHLsxX6CVsGPmPwtMFmkPEDLB7kDQfCdLZohfWBR9syYFfgR8nTo3ww34uot5HXTE', tone: 'endpoint' },
+  { text: '# Call it - from anywhere, any language', tone: 'comment' },
+  { text: '$ aster call ', tone: 'prompt', suffix: 'aster14Y5x...HXTE Fleet.status \'{"node_id":"edge-7"}\'' },
+  { text: '{', tone: 'json' },
+  { text: '  "node_id": "edge-7",', tone: 'json' },
+  { text: '  "hostname": "Emruls-MacBook-Pro.local",', tone: 'json' },
+  { text: '  "status": "healthy",', tone: 'json' },
+  { text: '  "uptime_secs": 3812688', tone: 'json' },
+  { text: '}', tone: 'json' },
+  { text: 'No DNS. No certs. No .proto files. Just run it.', tone: 'payoff' },
+];
+---
+
+<div
+  class:list={['terminal-stage', className]}
+  data-terminal-cast
+  data-cast-path={castPath}
+  aria-label="Animated terminal showing an Aster service being started and called">
+  <div class="terminal-stage__glow" aria-hidden="true"></div>
+  <div class="terminal-stage__mesh" aria-hidden="true"></div>
+  <div class="terminal-stage__scan" aria-hidden="true"></div>
+
+  <div class="terminal-chrome">
+    <div class="terminal-chrome__dots" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="terminal-chrome__title">{title}</div>
+    <div class="terminal-chrome__status">{status}</div>
+  </div>
+
+  <div class="terminal-stage__body">
+    <div class="terminal-cast" data-cast-output>
+      {fallbackLines.map((line, index) => (
+        <div
+          class={`terminal-line terminal-line--${line.tone}`}
+          style={`animation-delay: ${index * 0.34}s;`}>
+          <span class="terminal-line__text">{line.text}</span>
+          {line.suffix && <span class="terminal-line__paste">{line.suffix}</span>}
+        </div>
+      ))}
+      <span class="terminal-cursor"></span>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    if (window.__asterTerminalCastBooted) return;
+    window.__asterTerminalCastBooted = true;
+
+    const ansiPattern = /\x1b\[[0-?]*[ -/]*[@-~]/g;
+
+    function parseEvents(castText) {
+      return castText
+        .split(/\r?\n/)
+        .slice(1)
+        .filter((line) => line.trim() && !line.startsWith('#'))
+        .map((line) => {
+          try {
+            const [delay, code, data] = JSON.parse(line);
+            return code === 'o' ? { delay: Number(delay) || 0, text: cleanChunk(String(data)) } : null;
+          } catch {
+            return null;
+          }
+        })
+        .filter((event) => event && event.text.length > 0);
+    }
+
+    function cleanChunk(text) {
+      return text
+        .replace(ansiPattern, '')
+        .replace(/\x1b\[[0-9;]*[HJK]/g, '')
+        .replace(/\r/g, '');
+    }
+
+    function finalLinesFromEvents(events) {
+      return events
+        .map((event) => event.text)
+        .join('')
+        .split('\n')
+        .map((line) => line.trimEnd())
+        .filter((line) => line.trim().length > 0)
+        .map((text) => ({ text, tone: getTone(text) }));
+    }
+
+    function formatAsterCallSuffix(suffix) {
+      if (suffix.length <= 24) return suffix;
+      return suffix.replace(/^(.{12}).+(.{4} Fleet\.status.*)$/, '$1...$2');
+    }
+
+    function getTone(text) {
+      const trimmed = text.trimStart();
+      if (trimmed.startsWith('$')) return 'prompt';
+      if (trimmed.startsWith('#')) return 'comment';
+      if (trimmed.startsWith('@')) return 'schema';
+      if (trimmed.startsWith('{') || trimmed.startsWith('}') || trimmed.startsWith('"')) return 'json';
+      if (trimmed.startsWith('aster')) return 'endpoint';
+      if (trimmed.includes('No DNS.')) return 'payoff';
+      if (trimmed.includes('Aster RPC')) return 'hero';
+      return 'code';
+    }
+
+    function toTerminalLine(text) {
+      if (text.startsWith('$ aster call ')) {
+        return {
+          text: '$ aster call ',
+          suffix: formatAsterCallSuffix(text.slice('$ aster call '.length)),
+          tone: 'prompt',
+        };
+      }
+
+      return { text, tone: getTone(text) };
+    }
+
+    function createCursor(output) {
+      const cursor = document.createElement('span');
+      cursor.className = 'terminal-cursor';
+      output.append(cursor);
+      return cursor;
+    }
+
+    function createRow(output) {
+      const row = document.createElement('div');
+      row.className = 'terminal-line terminal-line--code';
+      row.dataset.raw = '';
+      output.append(row);
+      return row;
+    }
+
+    function renderRow(row) {
+      const rawText = row.dataset.raw || '';
+      const normalized = rawText.trimStart();
+      const line = toTerminalLine(normalized);
+
+      if (row.dataset.tone !== line.tone) {
+        row.className = `terminal-line terminal-line--${line.tone}`;
+        row.dataset.tone = line.tone;
+      }
+
+      row.replaceChildren();
+
+      const text = document.createElement('span');
+      text.className = 'terminal-line__text';
+      text.textContent = rawText.slice(0, rawText.length - normalized.length) + line.text;
+      row.append(text);
+
+      if (line.suffix) {
+        const suffix = document.createElement('span');
+        suffix.className = 'terminal-line__paste';
+        suffix.textContent = line.suffix;
+        row.append(suffix);
+      }
+    }
+
+    function renderLines(output, lines) {
+      output.replaceChildren();
+
+      lines.forEach((line, index) => {
+        const row = createRow(output);
+        row.style.animationDelay = `${index * 0.28}s`;
+        row.dataset.raw = line.text;
+        renderRow(row);
+      });
+
+      createCursor(output);
+    }
+
+    document.querySelectorAll('[data-terminal-cast]').forEach((stage) => {
+      const output = stage.querySelector('[data-cast-output]');
+      const castPath = stage.getAttribute('data-cast-path');
+
+      if (!output || !castPath) return;
+
+      fetch(castPath)
+        .then((response) => (response.ok ? response.text() : Promise.reject(new Error('cast not found'))))
+        .then((castText) => {
+          const events = parseEvents(castText);
+          if (events.length === 0) return;
+          renderLines(output, finalLinesFromEvents(events));
+        })
+        .catch(() => {
+          // Keep the authored fallback when the cast is unavailable in local previews.
+        });
+    });
+  })();
+</script>
+
+<style>
+  .terminal-stage {
+    position: relative;
+    min-height: 34rem;
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+    padding: 1rem;
+    border: 1px solid rgba(120, 166, 255, 0.14);
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(circle at 20% 18%, rgba(97, 214, 194, 0.2), transparent 24%),
+      radial-gradient(circle at 82% 70%, rgba(120, 166, 255, 0.22), transparent 30%),
+      linear-gradient(180deg, rgba(19, 26, 34, 0.96), rgba(8, 12, 18, 0.92));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 34px 90px rgba(0, 0, 0, 0.34),
+      0 0 0 10px rgba(120, 166, 255, 0.035);
+    overflow: hidden;
+    color-scheme: dark;
+  }
+
+  .terminal-stage__glow,
+  .terminal-stage__mesh,
+  .terminal-stage__scan {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .terminal-stage__glow {
+    background:
+      radial-gradient(circle at 22% 20%, rgba(97, 214, 194, 0.22), transparent 20%),
+      radial-gradient(circle at 80% 68%, rgba(120, 166, 255, 0.2), transparent 28%),
+      linear-gradient(135deg, rgba(230, 192, 107, 0.08), transparent 34%);
+    filter: blur(4px);
+    opacity: 0.9;
+    z-index: -3;
+  }
+
+  .terminal-stage__mesh {
+    background:
+      linear-gradient(90deg, rgba(120, 166, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(rgba(120, 166, 255, 0.08) 1px, transparent 1px);
+    background-size: 54px 54px;
+    mask-image: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0.95), transparent 72%);
+    opacity: 0.28;
+    z-index: -2;
+  }
+
+  .terminal-stage__scan {
+    height: 34%;
+    background: linear-gradient(180deg, transparent 0%, rgba(97, 214, 194, 0.1) 48%, transparent 100%);
+    opacity: 0.5;
+    transform: translateY(-120%);
+    animation: terminal-scan 7.2s linear infinite;
+    z-index: 2;
+  }
+
+  .terminal-chrome {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    min-height: 3rem;
+    padding: 0 0.75rem;
+    border: 1px solid rgba(120, 166, 255, 0.14);
+    border-radius: 22px 22px 12px 12px;
+    background: rgba(7, 10, 15, 0.74);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(14px);
+  }
+
+  .terminal-chrome__dots {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .terminal-chrome__dots span {
+    width: 0.62rem;
+    height: 0.62rem;
+    border-radius: 999px;
+    background: rgba(217, 225, 234, 0.32);
+  }
+
+  .terminal-chrome__dots span:nth-child(1) { background: #ff6b6b; }
+  .terminal-chrome__dots span:nth-child(2) { background: var(--trust); }
+  .terminal-chrome__dots span:nth-child(3) { background: var(--relay); }
+
+  .terminal-chrome__title,
+  .terminal-chrome__status {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .terminal-chrome__title { color: rgba(217, 225, 234, 0.58); }
+  .terminal-chrome__status {
+    justify-self: end;
+    color: var(--relay);
+  }
+
+  .terminal-stage__body {
+    position: relative;
+    z-index: 3;
+    flex: 1;
+    display: grid;
+    align-content: end;
+    padding: clamp(1rem, 2.8vw, 1.65rem);
+  }
+
+  .terminal-cast {
+    position: relative;
+    min-height: 27rem;
+    padding: 1rem 0.2rem 0;
+    overflow: hidden;
+    font-family: var(--mono);
+    font-size: clamp(0.68rem, 0.92vw, 0.9rem);
+    line-height: 1.58;
+    color: rgba(217, 225, 234, 0.82);
+  }
+
+  .terminal-line {
+    display: flex;
+    min-width: 0;
+    white-space: pre;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: terminal-reveal 0.58s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .terminal-line__text,
+  .terminal-line__paste {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .terminal-line__paste {
+    color: var(--signal);
+    animation: terminal-paste-flash 2.5s ease-in-out infinite;
+  }
+
+  .terminal-line--hero,
+  .terminal-line--prompt {
+    color: var(--relay);
+  }
+
+  .terminal-line--hero,
+  .terminal-line--payoff {
+    font-weight: 700;
+  }
+
+  .terminal-line--comment {
+    color: rgba(217, 225, 234, 0.48);
+  }
+
+  .terminal-line--schema {
+    color: var(--trust);
+  }
+
+  .terminal-line--endpoint {
+    color: rgba(120, 166, 255, 0.78);
+  }
+
+  .terminal-line--json {
+    color: rgba(217, 225, 234, 0.78);
+  }
+
+  .terminal-line--payoff {
+    margin-top: 0.5rem;
+    color: var(--cloud-strong);
+    text-shadow: 0 0 18px rgba(97, 214, 194, 0.18);
+  }
+
+  .terminal-cursor {
+    display: inline-block;
+    width: 0.55rem;
+    height: 1.05em;
+    margin-left: 0.15rem;
+    vertical-align: -0.12em;
+    background: var(--relay);
+    box-shadow: 0 0 18px rgba(97, 214, 194, 0.65);
+    animation: terminal-cursor-blink 1s steps(2, start) infinite;
+  }
+
+  @media (max-width: 640px) {
+    .terminal-stage {
+      min-height: 27rem;
+      padding: 0.7rem;
+      border-radius: 24px;
+    }
+
+    .terminal-chrome {
+      grid-template-columns: auto 1fr;
+    }
+
+    .terminal-chrome__status {
+      display: none;
+    }
+
+    .terminal-cast {
+      min-height: 22rem;
+      font-size: 0.62rem;
+    }
+  }
+
+  @keyframes terminal-reveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes terminal-scan {
+    0% { transform: translateY(-120%); }
+    58%, 100% { transform: translateY(320%); }
+  }
+
+  @keyframes terminal-cursor-blink {
+    50% { opacity: 0; }
+  }
+
+  @keyframes terminal-paste-flash {
+    0%, 100% { color: var(--signal); }
+    50% { color: var(--cloud-strong); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .terminal-line,
+    .terminal-stage__scan,
+    .terminal-cursor,
+    .terminal-line__paste {
+      animation: none;
+    }
+
+    .terminal-line {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<style is:global>
+  .terminal-stage .terminal-line {
+    display: flex;
+    min-width: 0;
+    white-space: pre;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: terminal-reveal 0.58s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .terminal-stage .terminal-line__text,
+  .terminal-stage .terminal-line__paste {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .terminal-stage .terminal-line__paste {
+    color: var(--signal);
+    animation: terminal-paste-flash 2.5s ease-in-out infinite;
+  }
+
+  .terminal-stage .terminal-line--hero,
+  .terminal-stage .terminal-line--prompt {
+    color: var(--relay);
+  }
+
+  .terminal-stage .terminal-line--hero,
+  .terminal-stage .terminal-line--payoff {
+    font-weight: 700;
+  }
+
+  .terminal-stage .terminal-line--comment {
+    color: rgba(217, 225, 234, 0.48);
+  }
+
+  .terminal-stage .terminal-line--schema {
+    color: var(--trust);
+  }
+
+  .terminal-stage .terminal-line--endpoint {
+    color: rgba(120, 166, 255, 0.78);
+  }
+
+  .terminal-stage .terminal-line--json {
+    color: rgba(217, 225, 234, 0.78);
+  }
+
+  .terminal-stage .terminal-line--payoff {
+    margin-top: 0.5rem;
+    color: var(--cloud-strong);
+    text-shadow: 0 0 18px rgba(97, 214, 194, 0.18);
+  }
+
+  .terminal-stage .terminal-cursor {
+    display: inline-block;
+    width: 0.55rem;
+    height: 1.05em;
+    margin-left: 0.15rem;
+    vertical-align: -0.12em;
+    background: var(--relay);
+    box-shadow: 0 0 18px rgba(97, 214, 194, 0.65);
+    animation: terminal-cursor-blink 1s steps(2, start) infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .terminal-stage .terminal-line,
+    .terminal-stage .terminal-cursor,
+    .terminal-stage .terminal-line__paste {
+      animation: none;
+    }
+
+    .terminal-stage .terminal-line {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

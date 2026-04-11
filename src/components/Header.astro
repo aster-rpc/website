@@ -1,10 +1,7 @@
 ---
 const links = [
-  { href: '/why', label: 'Why' },
-  { href: '/architecture', label: 'Architecture' },
-  { href: '/trust', label: 'Trust' },
-  { href: '/examples', label: 'Examples' },
   { href: 'https://docs.aster.site', label: 'Docs' },
+  { href: 'https://github.com/aster-rpc', label: 'GitHub' },
 ];
 ---
 <header class="topbar">
@@ -15,7 +12,6 @@ const links = [
     </a>
     <nav class="nav" aria-label="Primary">
       {links.map((link) => <a href={link.href}>{link.label}</a>)}
-      <span class="status-chip"><i></i> 0.1-alpha · Python reference</span>
     </nav>
   </div>
 </header>
@@ -41,7 +37,7 @@ const links = [
     align-items: center;
     gap: 14px;
     font-weight: 650;
-    font-size: 18px;
+    font-size: 20px;
     color: var(--cloud-strong);
     letter-spacing: -0.034em;
   }

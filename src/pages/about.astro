@@ -14,11 +14,11 @@ import Footer from '../components/Footer.astro';
       <div class="shell surface-dark pad hero-card">
         <div>
           <div class="meta-label">About</div>
-          <h1 class="page-hero-title">Pre-release. Python first. Building toward cross-runtime.</h1>
+          <h1 class="page-hero-title">Pre-release. Cross-runtime from the start.</h1>
           <p class="page-copy">
-            Aster is at version 0.1-alpha. The Python reference implementation is the primary
-            development surface. The architecture, trust model, contract identity system, and
-            wire protocol are implemented and tested. Cross-language runtimes are the next phase.
+            Aster is at version 0.1-alpha. Python and TypeScript are the first-class alpha
+            bindings today. The architecture, trust model, contract identity system, and
+            wire protocol are implemented and tested, with additional language bindings in progress.
           </p>
         </div>
       </div>
@@ -33,13 +33,13 @@ import Footer from '../components/Footer.astro';
         </article>
         <article class="card surface-light light-card">
           <div class="meta-label">Today</div>
-           <h2 class="page-card-title">Python reference implementation</h2>
-           <p class="page-card-copy">The <code>aster</code> Python package (published as <code>aster-python</code>) is built with PyO3 over a Rust core. iroh QUIC transport, Apache Fory codec, language-native decorators (<code>@service</code>, <code>@rpc</code>, <code>@server_stream</code>). Async/await throughout. Tests run with pytest-asyncio.</p>
+           <h2 class="page-card-title">Python and TypeScript alpha bindings</h2>
+           <p class="page-card-copy">The current alpha surface includes Python and TypeScript bindings over the shared Aster model: iroh QUIC transport, Apache Fory codec, language-native service definitions, streaming RPC patterns, and async-first client/server APIs.</p>
         </article>
         <article class="card surface-light light-card">
           <div class="meta-label">What comes next</div>
            <h2 class="page-card-title">More languages, CLI tools, production hardening</h2>
-           <p class="page-card-copy">Rust and JVM bindings using the same wire protocol and contract_id. Go and .NET follow. CLI tools for key management, contract publication, and registry interaction. Production hardening of the trust and session lifecycle. Performance profiling across serialization modes.</p>
+           <p class="page-card-copy">Java, .NET, Kotlin, and Go bindings are in progress. Rust is planned. CLI tools for key management, contract publication, and registry interaction continue to harden alongside the trust and session lifecycle.</p>
         </article>
       </div>
     </section>
