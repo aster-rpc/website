@@ -4,10 +4,8 @@ import Header from '../components/Header.astro';
 import BrandMark from '../components/BrandMark.astro';
 import Footer from '../components/Footer.astro';
 
-const ex1 = `from aster import service, rpc
-from aster.codec import wire_type
-from aster.types import SerializationMode
-from dataclasses import dataclass
+const ex1 = `from dataclasses import dataclass
+from aster import service, rpc, wire_type, AsterServer
 
 @wire_type("hello/Req")
 @dataclass
@@ -19,40 +17,40 @@ class HelloReq:
 class HelloResp:
     greeting: str = ""
 
-@service(name="Hello", version=1,
-         serialization=[SerializationMode.XLANG])
+@service(name="Hello", version=1)
 class HelloService:
     @rpc(timeout=10.0, idempotent=True)
     async def greet(self, req: HelloReq) -> HelloResp:
         return HelloResp(greeting=f"hello, {req.name}")
 
-# Call it
-resp = await client.greet(HelloReq(name="world"))`;
+# Run it
+async with AsterServer(services=[HelloService()]) as srv:
+    print(srv.address)  # share with consumers
+    await srv.serve()`;
 
-const ex2 = `from aster import service, server_stream
-from typing import AsyncIterator
+const ex2 = `from typing import AsyncIterator
+from aster import service, server_stream
 
-@service(name="Counter", version=1,
-         serialization=[SerializationMode.XLANG])
+@service(name="Counter", version=1)
 class CounterService:
 
     @server_stream
-    async def count(self, req: CountReq
+    async def count(
+        self, req: CountReq,
     ) -> AsyncIterator[CountItem]:
         for i in range(req.count):
             yield CountItem(value=req.start + i)
 
-# Consume the stream
-async for item in client.count(CountReq(start=0, count=5)):
-    print(item.value)`;
+# Consume the stream from the proxy client:
+#   mc = client.proxy("Counter")
+async for item in mc.count.stream({"start": 0, "count": 5}):
+    print(item["value"])`;
 
-const ex3 = `from aster import service, rpc
-from aster.session import create_local_session
+const ex3 = `from aster import service, rpc, AsterClient
 
-@service(name="Accumulator", version=1,
-         scoped="stream")
+@service(name="Accumulator", version=1, scoped="session")
 class AccumulatorService:
-    def __init__(self, peer=None):
+    def __init__(self, peer: str):
         self.peer = peer
         self.total = 0
 
@@ -61,36 +59,36 @@ class AccumulatorService:
         self.total += req.value
         return Resp(result=self.total)
 
-    def on_session_close(self):
-        pass  # cleanup hook
+    async def on_session_close(self) -> None:
+        pass  # per-session cleanup hook
 
 # State persists across calls within one session
-session = create_local_session(AccumulatorService)
-await session.add(Req(value=10))  # total: 10
-await session.add(Req(value=5))   # total: 15`;
+async with AsterClient(address="aster1...") as c:
+    acc = await c.session("Accumulator")
+    await acc.call("add", {"value": 10})  # total: 10
+    await acc.call("add", {"value": 5})   # total: 15`;
 
-const ex4 = `from aster.trust import (
-    generate_root_keypair,
-    EnrollmentCredential,
-    sign_credential,
-    MeshEndpointHook,
-)
-import time
+const ex4 = `# One-time: generate the offline root identity
+$ aster keygen root --out ~/.aster/root.key
+   -> ~/.aster/root.key (private -- keep secret)
+   -> ~/.aster/root.pub (public -- share with nodes)
 
-# Generate offline root key
-priv, pub = generate_root_keypair()
+# Enroll a node and write its credential
+$ aster enroll node --role consumer --name edge-node-7 \\
+    --capabilities ops.status,ops.ingest \\
+    --root-key ~/.aster/root.key \\
+    --out edge-node-7.cred
 
-# Sign an enrollment credential
-cred = EnrollmentCredential(
-    endpoint_id="producer-01",
-    root_pubkey=pub,
-    expires_at=int(time.time()) + 3600,
-    attributes={"role": "worker"},
-)
-cred.signature = sign_credential(cred, priv)
-
-# Hook enforces admission at QUIC ALPN layer
-hook = MeshEndpointHook(root_pubkey=pub)`;
+# Run a server in trusted mode
+async with AsterServer(
+    services=[MissionControl()],
+    config=AsterConfig(
+        root_pubkey_file="~/.aster/root.pub",
+        allow_all_consumers=False,
+    ),
+    identity=".aster-identity",
+) as srv:
+    await srv.serve()`;
 ---
 <BaseLayout>
   <Header>

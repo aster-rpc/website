@@ -51,8 +51,8 @@ import Footer from '../components/Footer.astro';
             </article>
             <article class="layer serialization">
               <div class="meta-label">Layer 02</div>
-               <h3 class="page-card-title">Apache Fory serialization</h3>
-               <p class="page-card-copy">Three modes for different workload shapes. XLANG mode for cross-language interop across supported bindings. NATIVE mode for single-language maximum throughput. ROW mode for zero-copy columnar access on data-heavy payloads. 10-170x faster than protobuf in Fory benchmarks.</p>
+               <h3 class="page-card-title">Apache Fory serialization, with a JSON escape hatch</h3>
+               <p class="page-card-copy">Three Fory modes for different workload shapes. XLANG mode for cross-language interop across supported bindings. NATIVE mode for deployments where interoperability is second to performance. ROW mode for zero-copy columnar access on data-heavy payloads. 10-170x faster than protobuf in Fory benchmarks. And for the moments when you reach for <code>tcpdump</code> or <code>wireshark</code> in production, JSON mode keeps the wire human-readable -- the pain point gRPC binary payloads have always made worse.</p>
             </article>
             <article class="layer contract">
               <div class="meta-label">Layer 03</div>
