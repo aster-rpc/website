@@ -12,10 +12,12 @@ const languages = [
 ];
 
 const walkthroughSteps = [
-  'Typed services',
-  'Streaming calls',
-  'Session state',
-  'Scoped credentials',
+  'First agent check-in',
+  'Live log streaming',
+  'Metric ingestion',
+  'Agent sessions',
+  'Auth & capabilities',
+  'Generating typed clients',
   'Cross-language calls',
 ];
 ---
@@ -23,21 +25,34 @@ const walkthroughSteps = [
 <section class="terminal-hero">
   <div class="shell terminal-hero-grid">
     <div class="terminal-hero-copy">
-      <div class="eyebrow">Identity-first distributed systems substrate</div>
+      <div class="eyebrow">Peer-to-peer RPC framework</div>
       <h1>Aster</h1>
-      <div class="hero-tagline">Focus on services and access, not network ceremony.</div>
+      <div class="hero-tagline">Machines authenticate to machines, on behalf of users.</div>
       <p class="hero-copy">
-        Define typed services in code. Broker access for machines and AI agents.
-        Call across languages and real networks without proto files, pod-networking
-        spelunking, load balancers, or certificate infrastructure.
+        No DNS. No load balancer. No certificate authority. No OAuth proxy in
+        the middle. Define typed services in code; connect by cryptographic
+        address; authorise per method with capability credentials minted from
+        an offline root key.
       </p>
       <p class="hero-subhead">
-        Endpoints prove their own identity. Owners sign who gets in and what
-        they can call. The transport works out how to reach the machine.
+        The 2026 example: AI agents calling tools on remote machines without
+        a hosted proxy or shared secrets. The same engineering covers IoT
+        fleets, edge compute, and multi-tenant microservices &mdash; anywhere
+        a machine is the principal and the user is the delegating authority.
       </p>
       <div class="hero-actions">
         <a class="button primary" href="https://docs.aster.site/docs/quickstart/mission-control">Build Mission Control</a>
-        <a class="button secondary" href="/architecture">Explore the stack</a>
+        <a class="button secondary" href="https://docs.aster.site/docs/quickstart/python">Try it in 60 seconds</a>
+      </div>
+      <div class="hero-install" aria-label="Install commands">
+        <div class="install-row">
+          <span class="install-label">Python</span>
+          <code>pip install aster-rpc aster-cli</code>
+        </div>
+        <div class="install-row">
+          <span class="install-label">TypeScript</span>
+          <code>bun add @aster-rpc/aster</code>
+        </div>
       </div>
     </div>
 
@@ -185,6 +200,45 @@ const walkthroughSteps = [
 
   .hero-actions .primary {
     min-width: 198px;
+  }
+
+  .hero-install {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 22px;
+    max-width: 38rem;
+  }
+
+  .install-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid rgba(163, 178, 196, 0.12);
+    border-radius: 14px;
+    background: rgba(11, 15, 20, 0.62);
+    backdrop-filter: blur(8px);
+  }
+
+  .install-label {
+    flex: 0 0 auto;
+    font-size: 10px;
+    font-weight: 650;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mist-2);
+    min-width: 4.5rem;
+  }
+
+  .install-row code {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--cloud-strong);
+    background: transparent;
+    padding: 0;
+    border: 0;
+    user-select: all;
   }
 
   .terminal-hero-visual {
