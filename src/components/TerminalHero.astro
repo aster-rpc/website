@@ -2,13 +2,20 @@
 import TerminalCast from './TerminalCast.astro';
 
 const languages = [
-  { label: 'Python', tag: 'Py', state: 'Alpha', tone: 'alpha' },
-  { label: 'TypeScript', tag: 'TS', state: 'Alpha', tone: 'alpha' },
+  { label: 'Python', tag: 'Py', state: 'Shipping 0.1.2', tone: 'alpha' },
+  { label: 'TypeScript', tag: 'TS', state: 'Shipping 0.1.2', tone: 'alpha' },
   { label: 'Java', tag: 'Jv', state: 'In progress', tone: 'progress' },
   { label: '.NET', tag: '.N', state: 'In progress', tone: 'progress' },
   { label: 'Kotlin', tag: 'Kt', state: 'In progress', tone: 'progress' },
   { label: 'Go', tag: 'Go', state: 'In progress', tone: 'progress' },
   { label: 'Rust', tag: 'Rs', state: 'Planned', tone: 'planned' },
+];
+
+const proofMarkers = [
+  { label: 'iroh', detail: 'QUIC + NAT traversal' },
+  { label: 'Apache Fory', detail: 'cross-language wire format' },
+  { label: 'BLAKE3', detail: 'contract identity' },
+  { label: 'Four-gate auth', detail: 'offline root key' },
 ];
 
 const walkthroughSteps = [
@@ -29,16 +36,27 @@ const walkthroughSteps = [
       <h1>Aster</h1>
       <div class="hero-tagline">Machines authenticate to machines, on behalf of users.</div>
       <p class="hero-copy">
-        No DNS. No load balancer. No certificate authority. No OAuth proxy in
-        the middle. Define typed services in code; connect by cryptographic
-        address; authorise per method with capability credentials minted from
-        an offline root key.
+        Safely &mdash; without a central authority and without shared secrets.
+        No DNS, no load balancer, no certificate authority, no OAuth proxy in
+        the middle. Identity is in the connection, not bolted on.
       </p>
       <p class="hero-subhead">
         The 2026 example: AI agents calling tools on remote machines without
         a hosted proxy or shared secrets. The same engineering covers IoT
         fleets, edge compute, and multi-tenant microservices &mdash; anywhere
         a machine is the principal and the user is the delegating authority.
+      </p>
+      <ul class="hero-proof" aria-label="Engineering proof">
+        {proofMarkers.map((marker) => (
+          <li>
+            <strong>{marker.label}</strong>
+            <span>{marker.detail}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="hero-trajectory">
+        Next: identity-aware load balancing and self-healing, built from the
+        same primitives.
       </p>
       <div class="hero-actions">
         <a class="button primary" href="https://docs.aster.site/docs/quickstart/mission-control">Build Mission Control</a>
@@ -68,7 +86,7 @@ const walkthroughSteps = [
 
   <div class="shell mission-strip" aria-label="Mission Control walkthrough">
     <div class="mission-strip__copy">
-      <span class="meta-label">Day 0 walkthrough</span>
+      <span class="meta-label">30-minute walkthrough</span>
       <p>Build one real service path, then take the deeper detail in the docs.</p>
     </div>
     <div class="mission-steps">
@@ -189,6 +207,57 @@ const walkthroughSteps = [
     color: var(--mist);
     font-size: 16px;
     line-height: 1.62;
+  }
+
+  .hero-proof {
+    list-style: none;
+    padding: 0;
+    margin: 22px 0 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 18px;
+    max-width: 38rem;
+  }
+
+  .hero-proof li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 9px 12px;
+    border-left: 2px solid rgba(97, 214, 194, 0.38);
+    background: rgba(11, 15, 20, 0.42);
+    border-radius: 0 10px 10px 0;
+  }
+
+  .hero-proof strong {
+    color: var(--cloud-strong);
+    font-size: 13px;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-proof span {
+    color: var(--mist-2);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .hero-trajectory {
+    margin-top: 18px;
+    max-width: 34rem;
+    color: var(--mist);
+    font-size: 14px;
+    line-height: 1.55;
+    font-style: italic;
+  }
+
+  .hero-trajectory::before {
+    content: "→ ";
+    color: var(--relay);
+    font-style: normal;
+    font-weight: 650;
   }
 
   .hero-actions {
@@ -451,6 +520,10 @@ const walkthroughSteps = [
 
     .language-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hero-proof {
+      grid-template-columns: 1fr;
     }
   }
 </style>
