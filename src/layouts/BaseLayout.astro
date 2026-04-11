@@ -6,9 +6,11 @@ interface Props {
   description?: string;
 }
 const {
-  title = 'Aster — RPC after hostnames.',
-  description = 'Identity-first connectivity, content-addressed contracts, and cross-language services for real distributed systems.',
+  title = 'Aster — Machines authenticate to machines, on behalf of users.',
+  description = 'Peer-to-peer RPC framework with identity in the connection. No DNS, no load balancer, no certificate authority, no OAuth proxy. Built on iroh QUIC, Apache Fory, and BLAKE3.',
 } = Astro.props;
+const siteUrl = 'https://aster.site/';
+const socialImage = `${siteUrl}aster-social-card.png`;
 ---
 <!doctype html>
 <html lang="en">
@@ -17,6 +19,26 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/aster-mark.svg" />
+    <link rel="apple-touch-icon" href="/aster-mark.svg" />
+
+    <meta name="theme-color" content="#0b0f14" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Aster" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content="Aster — Peer-to-peer RPC framework" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content="Aster — Peer-to-peer RPC framework" />
   </head>
   <body>
     <slot />
