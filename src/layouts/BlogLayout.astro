@@ -1,0 +1,277 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import BrandMark from '../components/BrandMark.astro';
+import Footer from '../components/Footer.astro';
+
+interface Frontmatter {
+  title: string;
+  description?: string;
+  pubDate?: string;
+  author?: string;
+  hero?: string;
+  heroAlt?: string;
+}
+
+// Markdown layouts receive frontmatter under Astro.props.frontmatter.
+// Also accept top-level props for direct .astro use.
+const fm: Partial<Frontmatter> =
+  (Astro.props as { frontmatter?: Frontmatter }).frontmatter ?? (Astro.props as Frontmatter);
+const { title = '', description, pubDate, author = 'Emrul Islam', hero, heroAlt } = fm;
+
+const formattedDate = pubDate
+  ? new Date(pubDate).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : null;
+---
+
+<BaseLayout title={`${title} — Aster`} description={description}>
+  <Header>
+    <BrandMark slot="mark" />
+  </Header>
+
+  <main class="post">
+    {hero && (
+      <div class="hero-wrap">
+        <div class="hero-shell">
+          <img src={hero} alt={heroAlt ?? ''} class="hero-img" loading="eager" />
+        </div>
+      </div>
+    )}
+
+    <article class="shell post-shell">
+      <header class="post-header">
+        <p class="kicker">
+          <a href="/blog">Aster Blog</a>
+        </p>
+        <h1>{title}</h1>
+        {description && <p class="lede">{description}</p>}
+        <p class="meta">
+          <span>{author}</span>
+          {formattedDate && <><span class="dot">·</span><time datetime={pubDate}>{formattedDate}</time></>}
+        </p>
+      </header>
+
+      <div class="prose">
+        <slot />
+      </div>
+    </article>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .post {
+    padding: 64px 0 96px;
+  }
+  .hero-wrap {
+    width: 100%;
+    margin: 0 0 56px;
+  }
+  .hero-shell {
+    width: min(calc(100% - 32px), 960px);
+    margin: 0 auto;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-dark);
+    background:
+      radial-gradient(80% 60% at 50% 50%, rgba(120, 166, 255, 0.05), rgba(11, 15, 20, 0)) ,
+      linear-gradient(180deg, rgba(18, 25, 35, 0.92), rgba(12, 18, 26, 0.96));
+    box-shadow: var(--shadow-dark);
+    padding: 28px 24px;
+    overflow: hidden;
+  }
+  .hero-img {
+    display: block;
+    width: 100%;
+    max-width: 880px;
+    height: auto;
+    margin: 0 auto;
+  }
+  .post-shell {
+    width: min(calc(100% - 32px), 760px);
+    margin: 0 auto;
+  }
+  .post-header {
+    margin-bottom: 56px;
+  }
+  .kicker {
+    margin: 0 0 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mist-2);
+  }
+  .kicker a {
+    color: var(--relay);
+  }
+  .kicker a:hover {
+    color: var(--cloud-strong);
+  }
+  .post-header h1 {
+    font-size: clamp(36px, 4.6vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    color: var(--cloud-strong);
+    margin: 0 0 22px;
+    font-weight: 650;
+  }
+  .lede {
+    font-size: 20px;
+    line-height: 1.45;
+    color: var(--mist);
+    margin: 0 0 28px;
+    font-style: italic;
+  }
+  .meta {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--mist-2);
+    text-transform: uppercase;
+  }
+  .meta .dot {
+    margin: 0 10px;
+    opacity: 0.5;
+  }
+
+  .prose {
+    color: var(--cloud);
+    font-size: 17px;
+    line-height: 1.72;
+    letter-spacing: -0.005em;
+  }
+  .prose :global(h2) {
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: var(--cloud-strong);
+    margin: 56px 0 18px;
+    font-weight: 620;
+  }
+  .prose :global(h3) {
+    font-size: 20px;
+    color: var(--cloud-strong);
+    margin: 42px 0 12px;
+    font-weight: 600;
+  }
+  .prose :global(p) {
+    margin: 0 0 22px;
+  }
+  .prose :global(a) {
+    color: var(--relay);
+    text-decoration: underline;
+    text-decoration-color: rgba(97, 214, 194, 0.34);
+    text-underline-offset: 4px;
+    transition: color 0.18s ease, text-decoration-color 0.18s ease;
+  }
+  .prose :global(a:hover) {
+    color: var(--cloud-strong);
+    text-decoration-color: var(--cloud-strong);
+  }
+  .prose :global(em) {
+    color: var(--mist);
+    font-style: italic;
+  }
+  .prose :global(strong) {
+    color: var(--cloud-strong);
+    font-weight: 600;
+  }
+  .prose :global(code) {
+    font-family: var(--mono);
+    font-size: 0.92em;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-dark);
+    border-radius: 6px;
+    padding: 1px 6px;
+    color: var(--cloud-strong);
+  }
+  .prose :global(pre) {
+    background: rgba(11, 15, 20, 0.84);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-md);
+    padding: 22px 24px;
+    overflow-x: auto;
+    margin: 28px 0 32px;
+    font-size: 14px;
+    line-height: 1.6;
+    box-shadow: var(--shadow-dark);
+  }
+  .prose :global(pre code) {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    color: var(--cloud);
+  }
+  .prose :global(blockquote) {
+    border-left: 3px solid var(--relay);
+    margin: 28px 0;
+    padding: 4px 0 4px 22px;
+    color: var(--mist);
+    font-style: italic;
+  }
+  .prose :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--border-dark);
+    margin: 48px 0;
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 22px;
+    padding-left: 24px;
+  }
+  .prose :global(li) {
+    margin-bottom: 8px;
+  }
+  .prose :global(p:last-child em) {
+    display: block;
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border-dark);
+    font-size: 15px;
+    color: var(--mist);
+  }
+  /* Inline diagrams (markdown ![] images) get a subtle container */
+  .prose :global(p > img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 8px auto;
+  }
+  .prose :global(p:has(> img)) {
+    margin: 36px -16px;
+    padding: 24px 20px;
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(18, 25, 35, 0.7), rgba(12, 18, 26, 0.85));
+  }
+  /* Interactive SVG diagrams via <figure class="diagram"><object> */
+  .prose :global(figure.diagram) {
+    margin: 36px -16px;
+    padding: 24px 20px;
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(18, 25, 35, 0.7), rgba(12, 18, 26, 0.85));
+  }
+  .prose :global(figure.diagram object) {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 720px) {
+    .post {
+      padding: 36px 0 64px;
+    }
+    .post-header {
+      margin-bottom: 40px;
+    }
+  }
+</style>

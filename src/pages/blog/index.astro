@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import BrandMark from '../../components/BrandMark.astro';
+import Footer from '../../components/Footer.astro';
+
+const modules = import.meta.glob<{
+  frontmatter: { title: string; description?: string; pubDate?: string };
+  url: string;
+}>('./*.md', { eager: true });
+
+const posts = Object.values(modules);
+
+const sorted = posts.sort((a, b) => {
+  const da = new Date(a.frontmatter.pubDate ?? 0).getTime();
+  const db = new Date(b.frontmatter.pubDate ?? 0).getTime();
+  return db - da;
+});
+
+function formatDate(value: string | undefined): string {
+  if (!value) return '';
+  return new Date(value).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+---
+
+<BaseLayout
+  title="Blog — Aster"
+  description="Notes on Aster, peer-to-peer RPC, and machine-to-machine identity."
+>
+  <Header>
+    <BrandMark slot="mark" />
+  </Header>
+
+  <main class="index">
+    <div class="shell index-shell">
+      <header class="index-header">
+        <p class="kicker">Aster Blog</p>
+        <h1>Notes on machines, identity, and the seams in between.</h1>
+      </header>
+
+      <ul class="post-list">
+        {sorted.map((post) => (
+          <li class="post-item">
+            <a href={post.url} class="post-link">
+              <p class="post-meta">
+                {formatDate(post.frontmatter.pubDate)}
+              </p>
+              <h2>{post.frontmatter.title}</h2>
+              {post.frontmatter.description && (
+                <p class="post-desc">{post.frontmatter.description}</p>
+              )}
+              <span class="read">Read post →</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .index {
+    padding: 64px 0 96px;
+  }
+  .index-shell {
+    width: min(calc(100% - 32px), 880px);
+    margin: 0 auto;
+  }
+  .index-header {
+    margin-bottom: 64px;
+  }
+  .kicker {
+    margin: 0 0 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mist-2);
+  }
+  .index-header h1 {
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    color: var(--cloud-strong);
+    margin: 0;
+    font-weight: 650;
+    max-width: 24ch;
+  }
+  .post-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .post-item {
+    margin: 0;
+  }
+  .post-link {
+    display: block;
+    padding: 28px 30px;
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(18, 25, 35, 0.92), rgba(12, 18, 26, 0.96));
+    box-shadow: var(--shadow-dark);
+    transition: transform 0.18s ease, border-color 0.18s ease;
+  }
+  .post-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(97, 214, 194, 0.4);
+  }
+  .post-meta {
+    margin: 0 0 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist-2);
+  }
+  .post-link h2 {
+    margin: 0 0 12px;
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    color: var(--cloud-strong);
+    font-weight: 620;
+  }
+  .post-desc {
+    margin: 0 0 16px;
+    color: var(--mist);
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  .read {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--relay);
+    text-transform: uppercase;
+  }
+</style>

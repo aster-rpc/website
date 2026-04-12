@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-labelledby="title desc">
+  <title id="title">Identity in the connection</title>
+  <desc id="desc">Two endpoints connected by a mutual cryptographic handshake. No third party between them.</desc>
+
+  <defs>
+    <radialGradient id="aster-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#61D6C2" stop-opacity="0.22"/>
+      <stop offset="55%" stop-color="#61D6C2" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#61D6C2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="trust-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E6C06B" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#E6C06B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ambient handshake glow -->
+  <circle cx="480" cy="180" r="170" fill="url(#aster-glow)"/>
+
+  <!-- left endpoint: brand-mark riff -->
+  <g transform="translate(160, 180)">
+    <polygon points="0,-78 78,0 0,78 -78,0"
+             stroke="#78A6FF" stroke-width="4"
+             fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="-48" y="-48" width="96" height="96" rx="2"
+          stroke="#61D6C2" stroke-width="3" opacity="0.92"
+          fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="0" cy="0" r="8" fill="#E6C06B"/>
+  </g>
+
+  <!-- right endpoint: identical, two equal peers -->
+  <g transform="translate(800, 180)">
+    <polygon points="0,-78 78,0 0,78 -78,0"
+             stroke="#78A6FF" stroke-width="4"
+             fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="-48" y="-48" width="96" height="96" rx="2"
+          stroke="#61D6C2" stroke-width="3" opacity="0.92"
+          fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="0" cy="0" r="8" fill="#E6C06B"/>
+  </g>
+
+  <!-- left half of the connection: cloud blue lineage -->
+  <line x1="238" y1="180" x2="408" y2="180"
+        stroke="#78A6FF" stroke-width="2" opacity="0.55"/>
+  <circle cx="276" cy="180" r="3" fill="#78A6FF"/>
+  <circle cx="320" cy="180" r="3" fill="#78A6FF" opacity="0.78"/>
+  <circle cx="364" cy="180" r="3" fill="#78A6FF" opacity="0.55"/>
+
+  <!-- right half of the connection: mint lineage -->
+  <line x1="552" y1="180" x2="722" y2="180"
+        stroke="#61D6C2" stroke-width="2" opacity="0.55"/>
+  <circle cx="596" cy="180" r="3" fill="#61D6C2" opacity="0.55"/>
+  <circle cx="640" cy="180" r="3" fill="#61D6C2" opacity="0.78"/>
+  <circle cx="684" cy="180" r="3" fill="#61D6C2"/>
+
+  <!-- mutual handshake glyph: two identities meeting, trust point at the intersection -->
+  <g transform="translate(480, 180)">
+    <!-- amber halo behind trust point -->
+    <circle cx="0" cy="0" r="36" fill="url(#trust-glow)"/>
+    <!-- left identity ring (cloud blue) -->
+    <circle cx="-22" cy="0" r="46"
+            fill="none" stroke="#78A6FF" stroke-width="2.5"/>
+    <!-- right identity ring (mint) -->
+    <circle cx="22" cy="0" r="46"
+            fill="none" stroke="#61D6C2" stroke-width="2.5"/>
+    <!-- trust point at the intersection -->
+    <circle cx="0" cy="0" r="6.5" fill="#E6C06B"/>
+  </g>
+</svg>

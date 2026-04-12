@@ -18,14 +18,15 @@ const proofMarkers = [
   { label: 'Four-gate auth', detail: 'offline root key' },
 ];
 
+const MISSION_CONTROL_URL = 'https://docs.aster.site/docs/quickstart/mission-control';
+
 const walkthroughSteps = [
-  'First agent check-in',
-  'Live log streaming',
-  'Metric ingestion',
-  'Agent sessions',
-  'Auth & capabilities',
-  'Generating typed clients',
-  'Cross-language calls',
+  { label: 'First agent check-in',  anchor: 'chapter-1-your-first-agent-check-in-5-min' },
+  { label: 'Live log streaming',    anchor: 'chapter-2-live-log-streaming-5-min' },
+  { label: 'Metric ingestion',      anchor: 'chapter-3-metric-ingestion-5-min' },
+  { label: 'Agent sessions',        anchor: 'chapter-4-agent-sessions--remote-commands-5-min' },
+  { label: 'Auth & capabilities',   anchor: 'chapter-5-auth--capabilities-5-min' },
+  { label: 'Cross-language calls',  anchor: 'chapter-6-cross-language-interop-5-min' },
 ];
 ---
 
@@ -91,7 +92,9 @@ const walkthroughSteps = [
     </div>
     <div class="mission-steps">
       {walkthroughSteps.map((step, index) => (
-        <span><i>{String(index + 1).padStart(2, '0')}</i>{step}</span>
+        <a class="mission-step" href={`${MISSION_CONTROL_URL}#${step.anchor}`}>
+          <i>{String(index + 1).padStart(2, '0')}</i>{step.label}
+        </a>
       ))}
     </div>
   </div>
@@ -369,21 +372,36 @@ const walkthroughSteps = [
     gap: 10px;
   }
 
-  .mission-steps span {
+  .mission-step {
     display: inline-flex;
     align-items: center;
     gap: 9px;
     min-height: 42px;
-    padding: 0 12px;
+    padding: 0 14px;
     border: 1px solid rgba(120, 166, 255, 0.14);
     border-radius: 999px;
     background: rgba(11, 15, 20, 0.42);
     color: var(--cloud);
     font-size: 13px;
     font-weight: 620;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease, color 0.18s ease;
   }
 
-  .mission-steps i {
+  .mission-step:hover {
+    border-color: rgba(97, 214, 194, 0.55);
+    background: rgba(17, 24, 33, 0.78);
+    color: var(--cloud-strong);
+    transform: translateY(-1px);
+  }
+
+  .mission-step:focus-visible {
+    outline: 2px solid var(--relay);
+    outline-offset: 2px;
+  }
+
+  .mission-step i {
     color: var(--relay);
     font-family: var(--mono);
     font-size: 10px;
