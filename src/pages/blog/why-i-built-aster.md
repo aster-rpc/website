@@ -120,7 +120,7 @@ pip install aster-rpc
 bun add @aster-rpc/aster
 ```
 
-The [Mission Control walkthrough](https://docs.aster.site/docs/quickstart/mission-control) is the canonical 30-minute deep dive — seven chapters, four streaming patterns, auth, cross-language interop, and a working MCP agent demo at the end.
+The [Mission Control walkthrough](https://docs.aster.site/docs/quickstart/mission-control) is the full 30-minute deep dive — six chapters, four streaming patterns, auth, cross-language interop, and a working MCP agent demo at the end.
 
 Source at [github.com/aster-rpc/aster-rpc](https://github.com/aster-rpc/aster-rpc). Issues and questions welcome.
 
