@@ -50,11 +50,11 @@ const clientLines = [
   { text: '  "uptime_secs": 3812688', tone: 'json' },
   { text: '}', tone: 'json' },
   { text: '', tone: 'code' },
-  { text: '  # .claude/settings.json — expose to AI agents', tone: 'comment' },
+  { text: '  # .claude/settings.json — expose to AI agents with security', tone: 'comment' },
   { text: '  "mcpServers": {', tone: 'json' },
   { text: '    "fleet": {', tone: 'json' },
   { text: '      "command": "aster",', tone: 'json' },
-  { text: '      "args": ["mcp", "aster14Y5x...HXTE", "--allow", "Fleet.*"]', tone: 'json' },
+  { text: '      "args": ["mcp", "aster14Y5x...HXTE",', tone: 'json', suffix: ' "--allow", "Fleet.*"]', suffixTone: 'trust' },
   { text: '  }}', tone: 'json' },
 ];
 
@@ -194,7 +194,7 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
               {clientLines.map((l, i) => (
                 <div class={`m-tl m-tl--${l.tone}`} style={`animation-delay: ${(RIGHT_START + i * S).toFixed(2)}s`}>
                   <span class="m-tl-text">{l.text}</span>
-                  {l.suffix && <span class="m-tl-paste">{l.suffix}</span>}
+                  {l.suffix && <span class={`m-tl-paste${l.suffixTone ? ` m-tl-paste--${l.suffixTone}` : ''}`}>{l.suffix}</span>}
                 </div>
               ))}
               <span class="m-term-cursor" data-cursor-delay={RIGHT_CURSOR}></span>
@@ -697,6 +697,11 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
 
   .m-tl-paste {
     color: var(--signal);
+  }
+
+  .m-tl-paste--trust {
+    color: var(--trust);
+    font-weight: 600;
   }
 
   .m-terminals.playing .m-tl-paste {
