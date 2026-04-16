@@ -1,0 +1,370 @@
+<svg
+  class="aster-network-map"
+  viewBox="0 30 960 560"
+  role="img"
+  aria-labelledby="network-map-title network-map-desc">
+  <title id="network-map-title">Aster crossing real network obstacles</title>
+  <desc id="network-map-desc">
+    A stylized map where an agent and shell call services across firewalls,
+    NAT gateways, load balancers, CGNATs, proxies, and VPNs.
+  </desc>
+
+  <defs>
+    <marker id="map-arrow" markerWidth="12" markerHeight="12" refX="8" refY="6" orient="auto">
+      <path d="M 1 1 L 9 6 L 1 11 Z" fill="#61D6C2" />
+    </marker>
+
+    <linearGradient id="map-path-gradient" x1="80" x2="900" y1="320" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#78A6FF" />
+      <stop offset="0.52" stop-color="#61D6C2" />
+      <stop offset="1" stop-color="#E6C06B" />
+    </linearGradient>
+
+    <radialGradient id="map-core-glow" cx="50%" cy="50%" r="58%">
+      <stop stop-color="#61D6C2" stop-opacity="0.34" />
+      <stop offset="0.55" stop-color="#78A6FF" stop-opacity="0.12" />
+      <stop offset="1" stop-color="#0B0F14" stop-opacity="0" />
+    </radialGradient>
+
+    <filter id="map-soft-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect class="map-bg" x="0" y="0" width="960" height="640" rx="24" />
+  <path class="map-grid" d="M 80 40 V 600 M 180 40 V 600 M 280 40 V 600 M 380 40 V 600 M 480 40 V 600 M 580 40 V 600 M 680 40 V 600 M 780 40 V 600 M 880 40 V 600 M 40 100 H 920 M 40 200 H 920 M 40 300 H 920 M 40 400 H 920 M 40 500 H 920" />
+
+  <g class="map-zone map-zone--obstacles">
+    <rect x="326" y="62" width="282" height="516" rx="18" />
+    <text x="467" y="98">the internet in practice</text>
+  </g>
+
+  <g class="map-zone map-zone--services">
+    <rect x="692" y="92" width="202" height="120" rx="16" />
+    <rect x="692" y="260" width="202" height="120" rx="16" />
+    <rect x="692" y="428" width="202" height="120" rx="16" />
+    <text x="793" y="122">AWS / GCP / Azure</text>
+    <text x="793" y="290">DigitalOcean / Linode</text>
+    <text x="793" y="458">homelab / office</text>
+  </g>
+
+  <g class="map-client map-client--agent" transform="translate(72 178)">
+    <circle class="map-client__halo" cx="0" cy="0" r="46" />
+    <circle class="map-node" cx="0" cy="0" r="24" />
+    <path class="map-icon-line" d="M -8 -7 H 8 M -13 2 H 13 M -6 11 H 6" />
+    <text x="0" y="70">AI agent</text>
+  </g>
+
+  <g class="map-client map-client--shell" transform="translate(72 462)">
+    <circle class="map-client__halo" cx="0" cy="0" r="46" />
+    <rect class="map-node map-node--square" x="-25" y="-19" width="50" height="38" rx="8" />
+    <path class="map-icon-line" d="M -11 -2 L -3 6 L -11 14 M 3 14 H 14" />
+    <text x="0" y="70">your shell</text>
+  </g>
+
+  <g class="map-obstacles">
+    <g transform="translate(388 166)">
+      <rect class="map-obstacle" x="-32" y="-28" width="64" height="56" rx="10" />
+      <path class="map-obstacle-icon" transform="translate(0 4) scale(0.8)" d="M -7 12 C -21 -2 -8 -15 -5 -28 C 6 -18 20 -8 10 12 Z M 1 14 C -6 5 1 -3 5 -11 C 13 -1 13 8 1 14 Z" />
+      <text y="58">firewall</text>
+    </g>
+
+    <g transform="translate(532 166)">
+      <rect class="map-obstacle" x="-32" y="-28" width="64" height="56" rx="10" />
+      <path class="map-obstacle-icon" d="M -16 7 H 16 M -16 -7 H 16 M -7 -18 L -18 -7 L -7 4 M 7 -4 L 18 7 L 7 18" />
+      <text y="58">proxy</text>
+    </g>
+
+    <g transform="translate(388 320)">
+      <circle class="map-obstacle" cx="0" cy="0" r="32" />
+      <path class="map-obstacle-icon" d="M -17 -9 H 17 M -17 9 H 17 M -10 -18 L -20 -9 L -10 0 M 10 0 L 20 9 L 10 18" />
+      <text y="62">NAT</text>
+    </g>
+
+    <g transform="translate(532 320)">
+      <circle class="map-obstacle" cx="0" cy="0" r="32" />
+      <path class="map-obstacle-icon" d="M 0 -22 V -5 M -24 14 H 24 M -16 14 V 25 M 0 14 V 25 M 16 14 V 25 M -16 -5 H 16 V 14 H -16 Z" />
+      <text y="62">load balancer</text>
+    </g>
+
+    <g transform="translate(388 474)">
+      <rect class="map-obstacle" x="-32" y="-28" width="64" height="56" rx="10" />
+      <path class="map-obstacle-icon" d="M -20 12 L -4 -4 V -20 M 20 12 L 4 -4 V -20 M -13 19 H 13" />
+      <text y="58">CGNAT</text>
+    </g>
+
+    <g transform="translate(532 474)">
+      <rect class="map-obstacle" x="-32" y="-28" width="64" height="56" rx="10" />
+      <path class="map-obstacle-icon" transform="translate(0 -2) scale(0.88)" d="M -15 7 V -9 C -15 -22 15 -22 15 -9 V 7 M -21 7 H 21 V 26 H -21 Z M 0 14 V 21" />
+      <text y="58">VPN</text>
+    </g>
+  </g>
+
+  <g class="map-services">
+    <g transform="translate(752 166)">
+      <path class="map-cube" d="M 0 -28 L 30 -12 V 22 L 0 38 L -30 22 V -12 Z" />
+      <path class="map-cube-line" d="M -30 -12 L 0 4 L 30 -12 M 0 4 V 38" />
+      <path class="map-code" d="M 64 -15 H 100 V 27 H 64 Z M 74 -1 L 68 6 L 74 13 M 90 -1 L 96 6 L 90 13" />
+    </g>
+
+    <g transform="translate(752 334)">
+      <path class="map-cube" d="M 0 -28 L 30 -12 V 22 L 0 38 L -30 22 V -12 Z" />
+      <path class="map-cube-line" d="M -30 -12 L 0 4 L 30 -12 M 0 4 V 38" />
+      <path class="map-code" d="M 64 -15 H 100 V 27 H 64 Z M 74 -1 L 68 6 L 74 13 M 90 -1 L 96 6 L 90 13" />
+    </g>
+
+    <g transform="translate(752 502)">
+      <path class="map-cube" d="M 0 -28 L 30 -12 V 22 L 0 38 L -30 22 V -12 Z" />
+      <path class="map-cube-line" d="M -30 -12 L 0 4 L 30 -12 M 0 4 V 38" />
+      <path class="map-code" d="M 64 -15 H 100 V 27 H 64 Z M 74 -1 L 68 6 L 74 13 M 90 -1 L 96 6 L 90 13" />
+    </g>
+  </g>
+
+  <g class="map-aster" filter="url(#map-soft-glow)">
+    <circle class="map-core-glow" cx="468" cy="320" r="166" />
+    <path class="map-route map-route--base" d="M 112 178 C 226 178 234 320 354 320 C 438 320 486 320 578 320 C 666 320 664 166 718 166 M 112 462 C 230 462 226 320 354 320 M 578 320 C 666 320 664 334 718 334 M 578 320 C 666 320 664 502 718 502" />
+    <path class="map-route map-route--pulse" d="M 112 178 C 226 178 234 320 354 320 C 438 320 486 320 578 320 C 666 320 664 166 718 166 M 112 462 C 230 462 226 320 354 320 M 578 320 C 666 320 664 334 718 334 M 578 320 C 666 320 664 502 718 502" />
+
+    <g class="map-mark" transform="translate(468 320)">
+      <circle cx="0" cy="0" r="54" />
+      <polygon points="0,-38 38,0 0,38 -38,0" />
+      <polygon points="27,-27 27,27 -27,27 -27,-27" />
+      <circle cx="0" cy="0" r="7" />
+      <text x="0" y="82">Aster</text>
+    </g>
+  </g>
+</svg>
+
+<style>
+  .aster-network-map {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 420px;
+  }
+
+  .map-bg {
+    fill: rgba(11, 15, 20, 0.86);
+  }
+
+  .map-grid {
+    fill: none;
+    stroke: rgba(120, 166, 255, 0.08);
+    stroke-width: 1;
+  }
+
+  .map-zone rect {
+    fill: rgba(255, 255, 255, 0.025);
+    stroke: rgba(163, 178, 196, 0.12);
+  }
+
+  .map-zone--obstacles rect {
+    stroke-dasharray: 3 8;
+  }
+
+  .map-zone text,
+  .map-client text,
+  .map-obstacles text,
+  .map-mark text,
+  .map-zone--services text {
+    fill: #A5B3C2;
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-anchor: middle;
+    text-transform: uppercase;
+  }
+
+  .map-zone--services text {
+    fill: #D9E1EA;
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 660;
+    letter-spacing: -0.01em;
+    text-transform: none;
+  }
+
+  .map-client__halo {
+    fill: rgba(120, 166, 255, 0.08);
+    stroke: rgba(120, 166, 255, 0.22);
+  }
+
+  .map-node,
+  .map-obstacle {
+    fill: rgba(18, 25, 35, 0.94);
+    stroke: rgba(163, 178, 196, 0.24);
+    stroke-width: 2;
+  }
+
+  .map-client--agent .map-node {
+    stroke: rgba(120, 166, 255, 0.62);
+  }
+
+  .map-client--shell .map-node {
+    stroke: rgba(97, 214, 194, 0.62);
+  }
+
+  .map-icon-line,
+  .map-obstacle-icon,
+  .map-cube-line {
+    fill: none;
+    stroke: #D9E1EA;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+  }
+
+  .map-obstacle-icon {
+    stroke: #8C98A6;
+  }
+
+  .map-cube {
+    fill: rgba(217, 225, 234, 0.14);
+    stroke: rgba(217, 225, 234, 0.48);
+    stroke-linejoin: round;
+    stroke-width: 2;
+  }
+
+  .map-code {
+    fill: none;
+    stroke: rgba(120, 166, 255, 0.7);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+  }
+
+  .map-core-glow {
+    fill: url(#map-core-glow);
+  }
+
+  .map-route {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .map-route--base {
+    stroke: rgba(163, 178, 196, 0.18);
+    stroke-width: 7;
+  }
+
+  .map-route--pulse {
+    animation: map-flow 4.8s linear infinite;
+    stroke: url(#map-path-gradient);
+    stroke-dasharray: 24 34;
+    stroke-width: 5;
+  }
+
+  .map-mark circle:first-child {
+    fill: rgba(11, 15, 20, 0.92);
+    stroke: rgba(97, 214, 194, 0.34);
+    stroke-width: 2;
+  }
+
+  .map-mark polygon {
+    animation: map-spin 14s linear infinite;
+    fill: none;
+    stroke: #78A6FF;
+    stroke-linejoin: round;
+    stroke-width: 6;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .map-mark polygon + polygon {
+    animation-direction: reverse;
+    animation-duration: 18s;
+    stroke: #61D6C2;
+    stroke-width: 5;
+  }
+
+  .map-mark circle:last-of-type {
+    animation: map-heartbeat 2.6s ease-in-out infinite;
+    fill: #E6C06B;
+  }
+
+  .map-mark text {
+    fill: #61D6C2;
+    font-size: 13px;
+    font-weight: 650;
+  }
+
+  .map-client__halo,
+  .map-obstacle,
+  .map-cube,
+  .map-code {
+    animation: map-breathe 5.6s ease-in-out infinite;
+  }
+
+  .map-services g:nth-child(2) .map-cube,
+  .map-services g:nth-child(2) .map-code,
+  .map-obstacles g:nth-child(2) .map-obstacle,
+  .map-obstacles g:nth-child(4) .map-obstacle {
+    animation-delay: -1.5s;
+  }
+
+  .map-services g:nth-child(3) .map-cube,
+  .map-services g:nth-child(3) .map-code,
+  .map-obstacles g:nth-child(3) .map-obstacle,
+  .map-obstacles g:nth-child(5) .map-obstacle {
+    animation-delay: -2.8s;
+  }
+
+  @keyframes map-flow {
+    to {
+      stroke-dashoffset: -116;
+    }
+  }
+
+  @keyframes map-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes map-heartbeat {
+    0%,
+    100% {
+      r: 7;
+      opacity: 0.82;
+    }
+
+    48% {
+      r: 10;
+      opacity: 1;
+    }
+  }
+
+  @keyframes map-breathe {
+    0%,
+    100% {
+      opacity: 0.82;
+    }
+
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .aster-network-map {
+      min-width: 44rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .map-route--pulse,
+    .map-mark polygon,
+    .map-mark circle:last-of-type,
+    .map-client__halo,
+    .map-obstacle,
+    .map-cube,
+    .map-code {
+      animation: none;
+    }
+  }
+</style>

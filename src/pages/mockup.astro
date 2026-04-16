@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import BrandMark from '../components/BrandMark.astro';
+import WorldToday from '../components/WorldToday.astro';
+import Footer from '../components/Footer.astro';
+---
+<BaseLayout
+  title="Aster mockup — Call services on machines you do not control."
+  description="Peer-to-peer RPC for agents, tools, edge devices, and services behind NATs, firewalls, CGNATs, and proxies. No DNS, load balancer, TLS certificate, or hosted auth proxy required."
+>
+  <Header>
+    <BrandMark slot="mark" />
+  </Header>
+
+  <main>
+    <WorldToday />
+  </main>
+
+  <Footer />
+</BaseLayout>

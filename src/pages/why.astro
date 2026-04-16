@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import BrandMark from '../components/BrandMark.astro';
+import WhyAster from '../components/WhyAster.astro';
+import Footer from '../components/Footer.astro';
+---
+<BaseLayout
+  title="Aster — Two machines. One function call. No infrastructure."
+  description="Your services are behind firewalls, NATs, and CGNATs. Aster connects them by cryptographic identity — no DNS, no certificates, no port forwarding."
+>
+  <Header>
+    <BrandMark slot="mark" />
+  </Header>
+
+  <main>
+    <WhyAster />
+  </main>
+
+  <Footer />
+</BaseLayout>

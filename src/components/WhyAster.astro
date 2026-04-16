@@ -1,0 +1,746 @@
+---
+const triggers = [
+  {
+    title: 'Behind a firewall or NAT',
+    desc: 'Your service runs on a network you don\'t fully control — corporate VPC, cloud subnet, home router.',
+  },
+  {
+    title: 'On Starlink or mobile',
+    desc: 'CGNAT means no public IP. Port forwarding isn\'t an option. Neither is a static address.',
+  },
+  {
+    title: 'AI agents calling remote tools',
+    desc: 'Your LLM needs to invoke a tool on your home lab, a GPU box, or a colleague\'s machine — not through a proxy.',
+  },
+  {
+    title: 'Multi-cloud or hybrid',
+    desc: 'Services in AWS, DigitalOcean, and your home lab. You\'re done with VPNs and tunnels between them.',
+  },
+  {
+    title: 'Done with certificate management',
+    desc: 'No more running a CA, issuing certs, configuring renewal, or debugging TLS handshake errors at 2am.',
+  },
+  {
+    title: 'Peer-to-peer without a broker',
+    desc: 'Two machines should talk directly — not through a relay, a message queue, or somebody else\'s server.',
+  },
+];
+
+const serverCode = `<span class="hl-dec">@service</span>(name=<span class="hl-str">"Tools"</span>, version=<span class="hl-num">1</span>)
+<span class="hl-kw">class</span> <span class="hl-cls">Tools</span>:
+    <span class="hl-dec">@rpc</span>
+    <span class="hl-kw">async def</span> <span class="hl-fn">hello</span>(self, req: HelloRequest) -&gt; HelloReply:
+        <span class="hl-kw">return</span> HelloReply(message=<span class="hl-str">f"Hello {req.name}!"</span>)
+
+<span class="hl-cmt"># Start the server → prints: aster1qx9k7f...</span>`;
+
+const clientCode = `<span class="hl-kw">async with</span> AsterClient(<span class="hl-str">"aster1qx9k7f..."</span>) <span class="hl-kw">as</span> c:
+    tools = c.proxy(<span class="hl-str">"Tools"</span>)
+    reply = <span class="hl-kw">await</span> tools.hello(<span class="hl-str">{"name": "world"}</span>)
+    <span class="hl-cmt"># → "Hello world!"</span>`;
+---
+
+<div class="why-page">
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="why-hero">
+    <div class="shell why-hero-inner">
+      <p class="why-kicker">The problem</p>
+      <h1 class="why-headline">
+        Two machines.<br/>
+        One function call.<br/>
+        <span class="why-headline-accent">Seven layers of infrastructure.</span>
+      </h1>
+      <p class="why-lede">
+        You wrote a 20-line service and deployed it. Now configure firewalls,
+        NATs, TLS certificates, DNS records, load balancers, and API keys —
+        on <em>both sides</em> — just so another machine can call one function.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════ BEFORE / AFTER ═══════ -->
+  <section class="compare-section">
+    <div class="shell">
+      <div class="compare-grid animate-on-scroll">
+
+        <!-- BEFORE -->
+        <div class="compare-card compare-before">
+          <div class="compare-label">Without Aster</div>
+          <div class="compare-big">7</div>
+          <div class="compare-subtitle">things between you and your service</div>
+          <ul class="compare-list">
+            <li>
+              <span class="cl-bullet" aria-hidden="true"></span>
+              <span>Firewall rules — both sides, per-port</span>
+            </li>
+            <li>
+              <span class="cl-bullet" aria-hidden="true"></span>
+              <span>NAT traversal — STUN, TURN, or give up</span>
+            </li>
+            <li>
+              <span class="cl-bullet" aria-hidden="true"></span>
+              <span>CGNAT — no public IP at all</span>
+            </li>
+            <li>
+              <span class="cl-bullet" aria-hidden="true"></span>
+              <span>TLS certificates — obtain, renew, pray</span>
+            </li>
+            <li>
+              <span class="cl-bullet" aria-hidden="true"></span>
+              <span>DNS records — A, CNAME, TTLs, propagation</span>
+            </li>
+            <li>
+              <span class="cl-bullet" aria-hidden="true"></span>
+              <span>API keys — shared secrets that leak</span>
+            </li>
+            <li>
+              <span class="cl-bullet" aria-hidden="true"></span>
+              <span>Load balancer or proxy — another box to run</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- AFTER -->
+        <div class="compare-card compare-after">
+          <div class="compare-label">With Aster</div>
+          <div class="compare-big">1</div>
+          <div class="compare-subtitle">address — a public key</div>
+          <div class="compare-address">aster1qx9k7f…</div>
+          <ul class="compare-perks">
+            <li>
+              <span class="cp-check" aria-hidden="true"></span>
+              <span>Punches through firewalls, NATs, and CGNATs</span>
+            </li>
+            <li>
+              <span class="cp-check" aria-hidden="true"></span>
+              <span>Mutual auth at the QUIC handshake</span>
+            </li>
+            <li>
+              <span class="cp-check" aria-hidden="true"></span>
+              <span>No certificates, no DNS, no shared secrets</span>
+            </li>
+            <li>
+              <span class="cp-check" aria-hidden="true"></span>
+              <span>Direct peer-to-peer — no proxy in the middle</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ CODE ═══════ -->
+  <section class="code-section">
+    <div class="shell">
+      <div class="code-header animate-on-scroll">
+        <p class="section-kicker">This is all it takes</p>
+        <h2 class="page-section-title">A few lines to connect.<br/>From anywhere.</h2>
+      </div>
+      <div class="code-panels animate-on-scroll">
+        <div class="code-panel">
+          <div class="code-chrome">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="code-title">server.py — on any machine, anywhere</span>
+          </div>
+          <pre class="code-body"><code set:html={serverCode} /></pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-chrome">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="code-title">client.py — from anywhere else</span>
+          </div>
+          <pre class="code-body"><code set:html={clientCode} /></pre>
+        </div>
+      </div>
+      <p class="code-footnote animate-on-scroll">
+        No hostname. No port. No shared secret. The address <em>is</em> the identity.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════ TRIGGERS ═══════ -->
+  <section class="triggers-section">
+    <div class="shell">
+      <p class="section-kicker">When to use it</p>
+      <h2 class="page-section-title">Reach for Aster when…</h2>
+      <div class="triggers-grid">
+        {triggers.map((t, i) => (
+          <div class="trigger-card animate-on-scroll">
+            <h3 class="trigger-title">{t.title}</h3>
+            <p class="trigger-desc">{t.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ CTA ═══════ -->
+  <section class="cta-section">
+    <div class="shell">
+      <div class="cta-card animate-on-scroll">
+        <h2 class="cta-heading">Try it in 60 seconds</h2>
+        <div class="cta-install">
+          <div class="install-row">
+            <span class="install-label">Python</span>
+            <code>pip install aster-rpc aster-cli</code>
+          </div>
+          <div class="install-row">
+            <span class="install-label">TypeScript</span>
+            <code>bun add @aster-rpc/aster</code>
+          </div>
+        </div>
+        <div class="cta-buttons">
+          <a class="button primary" href="https://docs.aster.site/docs/quickstart/mission-control">Build Mission Control</a>
+          <a class="button secondary" href="https://docs.aster.site/docs/quickstart/python">Quickstart</a>
+        </div>
+        <a class="cta-story" href="/blog/why-i-built-aster">Read the origin story &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<style>
+  /* ═══════════════════════════════════
+     HERO
+     ═══════════════════════════════════ */
+  .why-hero {
+    padding: 130px 0 60px;
+    text-align: center;
+    background: radial-gradient(ellipse at 50% 80%, rgba(255, 107, 74, 0.045), transparent 55%);
+  }
+
+  .why-hero-inner > * {
+    animation: why-fade-up 0.72s cubic-bezier(0.19, 1, 0.22, 1) both;
+  }
+
+  .why-kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mist-2);
+    margin: 0 0 28px;
+    animation-delay: 0s;
+  }
+
+  .why-headline {
+    font-size: clamp(34px, 5.8vw, 72px);
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    font-weight: 750;
+    margin: 0 0 30px;
+    color: var(--cloud-strong);
+    animation-delay: 0.08s;
+  }
+
+  .why-headline-accent {
+    color: #FF6B4A;
+  }
+
+  .why-lede {
+    font-size: clamp(17px, 1.5vw, 20px);
+    line-height: 1.65;
+    color: var(--mist);
+    max-width: 52ch;
+    margin: 0 auto;
+    animation-delay: 0.16s;
+  }
+
+  .why-lede em {
+    color: var(--cloud);
+    font-style: normal;
+    font-weight: 550;
+  }
+
+  /* ═══════════════════════════════════
+     COMPARE: BEFORE / AFTER
+     ═══════════════════════════════════ */
+  .compare-section {
+    padding: 20px 0 60px;
+  }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .compare-card {
+    padding: 40px 34px;
+    border-radius: var(--radius-xl);
+  }
+
+  .compare-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  /* ── Before card ── */
+  .compare-before {
+    border: 1px solid rgba(255, 107, 74, 0.14);
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255, 107, 74, 0.04), transparent 60%),
+      rgba(255, 107, 74, 0.015);
+  }
+
+  .compare-before .compare-label {
+    color: rgba(255, 107, 74, 0.7);
+  }
+
+  .compare-before .compare-big {
+    color: #FF6B4A;
+    text-shadow: 0 0 80px rgba(255, 107, 74, 0.18);
+  }
+
+  /* ── After card ── */
+  .compare-after {
+    border: 1px solid rgba(97, 214, 194, 0.14);
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(97, 214, 194, 0.04), transparent 60%),
+      rgba(97, 214, 194, 0.015);
+  }
+
+  .compare-after .compare-label {
+    color: rgba(97, 214, 194, 0.7);
+  }
+
+  .compare-after .compare-big {
+    color: var(--relay);
+    text-shadow: 0 0 80px rgba(97, 214, 194, 0.18);
+  }
+
+  /* ── Shared card elements ── */
+  .compare-big {
+    font-size: clamp(72px, 10vw, 110px);
+    font-weight: 800;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    margin-bottom: 6px;
+  }
+
+  .compare-subtitle {
+    font-size: clamp(16px, 1.4vw, 19px);
+    color: var(--mist);
+    margin-bottom: 24px;
+  }
+
+  /* ── Before: obstacle list ── */
+  .compare-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .compare-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 107, 74, 0.06);
+    font-size: 14px;
+    color: var(--cloud);
+    line-height: 1.45;
+  }
+
+  .compare-list li:last-child {
+    border-bottom: none;
+  }
+
+  .cl-bullet {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 107, 74, 0.55);
+    flex-shrink: 0;
+    position: relative;
+    top: 5px;
+  }
+
+  /* ── After: address badge + perks ── */
+  .compare-address {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: clamp(14px, 1.2vw, 16px);
+    color: var(--relay);
+    padding: 9px 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(97, 214, 194, 0.2);
+    background: rgba(97, 214, 194, 0.06);
+    margin-bottom: 24px;
+    letter-spacing: 0.02em;
+  }
+
+  .compare-perks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .compare-perks li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 0;
+    font-size: 14px;
+    color: var(--cloud);
+    line-height: 1.45;
+  }
+
+  .cp-check {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    background: rgba(97, 214, 194, 0.1);
+    border: 1px solid rgba(97, 214, 194, 0.22);
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .cp-check::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border-right: 2px solid var(--relay);
+    border-bottom: 2px solid var(--relay);
+    transform: rotate(45deg);
+  }
+
+  /* ═══════════════════════════════════
+     CODE PANELS
+     ═══════════════════════════════════ */
+  .code-section {
+    padding: 60px 0 40px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(97, 214, 194, 0.03), transparent 50%);
+  }
+
+  .code-header {
+    margin-bottom: 32px;
+  }
+
+  .code-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .code-panel {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-dark);
+    background: rgba(11, 15, 20, 0.92);
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+  }
+
+  .code-chrome {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(163, 178, 196, 0.08);
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--steel);
+  }
+
+  .code-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--mist-2);
+    letter-spacing: 0.02em;
+    margin-left: 6px;
+  }
+
+  .code-body {
+    padding: 22px 20px;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--cloud);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .code-body code {
+    font-family: inherit;
+  }
+
+  .hl-kw  { color: var(--signal); }
+  .hl-str { color: var(--relay); }
+  .hl-dec { color: var(--trust); }
+  .hl-cmt { color: var(--mist-2); }
+  .hl-cls { color: var(--cloud-strong); font-weight: 600; }
+  .hl-fn  { color: var(--cloud); }
+  .hl-num { color: var(--trust); }
+  .hl-var { color: var(--cloud-strong); }
+
+  .code-footnote {
+    text-align: center;
+    font-size: clamp(17px, 1.5vw, 20px);
+    color: var(--mist);
+    margin: 36px 0 0;
+    line-height: 1.55;
+  }
+
+  .code-footnote em {
+    color: var(--relay);
+    font-style: italic;
+  }
+
+  /* ═══════════════════════════════════
+     TRIGGER CONDITIONS
+     ═══════════════════════════════════ */
+  .triggers-section {
+    padding: 70px 0 40px;
+  }
+
+  .triggers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 30px;
+  }
+
+  .trigger-card {
+    padding: 26px 24px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-dark);
+    background: rgba(17, 24, 33, 0.55);
+    transition: border-color 0.22s ease, transform 0.22s ease, background 0.22s ease;
+  }
+
+  .trigger-card:hover {
+    border-color: rgba(97, 214, 194, 0.18);
+    background: rgba(17, 24, 33, 0.75);
+    transform: translateY(-2px);
+  }
+
+  .trigger-title {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 620;
+    color: var(--cloud-strong);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .trigger-desc {
+    margin: 0;
+    font-size: 14px;
+    color: var(--mist);
+    line-height: 1.55;
+  }
+
+  /* ═══════════════════════════════════
+     CTA
+     ═══════════════════════════════════ */
+  .cta-section {
+    padding: 30px 0 80px;
+  }
+
+  .cta-card {
+    text-align: center;
+    padding: 52px 36px 44px;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-dark);
+    background: linear-gradient(180deg, rgba(18, 25, 35, 0.92), rgba(12, 18, 26, 0.96));
+    box-shadow: var(--shadow-dark);
+  }
+
+  .cta-heading {
+    margin: 0 0 28px;
+    font-size: clamp(26px, 3.4vw, 40px);
+    letter-spacing: -0.04em;
+    color: var(--cloud-strong);
+    line-height: 1.05;
+  }
+
+  .cta-install {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .install-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 14px;
+  }
+
+  .install-label {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mist-2);
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .install-row code {
+    color: var(--relay);
+    font-family: var(--mono);
+    background: rgba(97, 214, 194, 0.05);
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(97, 214, 194, 0.1);
+  }
+
+  .cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .cta-story {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--mist);
+    transition: color 0.18s ease;
+    letter-spacing: 0.01em;
+  }
+
+  .cta-story:hover {
+    color: var(--relay);
+  }
+
+  /* ═══════════════════════════════════
+     ANIMATIONS
+     ═══════════════════════════════════ */
+  @keyframes why-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.65s cubic-bezier(0.19, 1, 0.22, 1),
+                transform 0.65s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ═══════════════════════════════════
+     RESPONSIVE
+     ═══════════════════════════════════ */
+  @media (max-width: 900px) {
+    .why-hero {
+      padding: 100px 0 50px;
+    }
+
+    .compare-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .code-panels {
+      grid-template-columns: 1fr;
+    }
+
+    .triggers-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .why-hero {
+      padding: 80px 0 40px;
+    }
+
+    .compare-card {
+      padding: 30px 22px;
+    }
+
+    .triggers-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-card {
+      padding: 36px 20px 32px;
+    }
+
+    .install-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .install-label {
+      text-align: left;
+      min-width: auto;
+    }
+
+    .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cta-buttons .button {
+      width: 100%;
+      max-width: 280px;
+    }
+  }
+
+  /* ═══════════════════════════════════
+     REDUCED MOTION
+     ═══════════════════════════════════ */
+  @media (prefers-reduced-motion: reduce) {
+    .why-hero-inner > * {
+      animation: none;
+      opacity: 1;
+    }
+
+    .animate-on-scroll {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+  );
+
+  document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+    observer.observe(el);
+  });
+</script>

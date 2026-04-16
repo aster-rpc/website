@@ -1,0 +1,513 @@
+---
+import AsterNetworkMap from './AsterNetworkMap.astro';
+
+const obstacles = [
+  'Firewall rules',
+  'NAT traversal',
+  'CGNAT',
+  'TLS certificates',
+  'DNS records',
+  'API keys',
+  'Load balancer or proxy',
+];
+
+const outcomes = [
+  'Dial by public key, not hostname',
+  'Mutual auth in the QUIC connection',
+  'Capabilities scoped to service methods',
+  'Direct when possible, relayed when needed',
+];
+
+const situations = [
+  {
+    title: 'AI agents calling remote tools',
+    copy: 'Your LLM needs a function on a laptop, GPU box, customer machine, or homelab without posting the tool behind a hosted proxy.',
+  },
+  {
+    title: 'Devices behind networks you do not own',
+    copy: 'Starlink, mobile networks, corporate Wi-Fi, customer sites, and edge boxes can move or disappear behind CGNAT.',
+  },
+  {
+    title: 'Hybrid services without another mesh',
+    copy: 'AWS, DigitalOcean, and your own machines need typed calls without standing up VPNs, load balancers, and certificate machinery first.',
+  },
+];
+
+const serverCode = `<span class="hl-dec">@service</span>(name=<span class="hl-str">"Tools"</span>, version=<span class="hl-num">1</span>)
+<span class="hl-kw">class</span> <span class="hl-cls">Tools</span>:
+    <span class="hl-dec">@rpc</span>
+    <span class="hl-kw">async def</span> <span class="hl-fn">hello</span>(self, req) -&gt; HelloReply:
+        <span class="hl-kw">return</span> HelloReply(message=<span class="hl-str">f"Hello {req.name}!"</span>)
+
+<span class="hl-cmt"># prints: aster1qx9k7f...</span>`;
+
+const clientCode = `<span class="hl-kw">async with</span> AsterClient(<span class="hl-str">"aster1qx9k7f..."</span>) <span class="hl-kw">as</span> c:
+    tools = c.proxy(<span class="hl-str">"Tools"</span>)
+    reply = <span class="hl-kw">await</span> tools.hello({<span class="hl-str">"name"</span>: <span class="hl-str">"world"</span>})
+    <span class="hl-cmt"># "Hello world!"</span>`;
+---
+
+<div class="mockup-a">
+  <section class="merge-hero" aria-labelledby="merge-title">
+    <div class="shell merge-grid">
+      <div class="merge-copy">
+        <span class="meta-label">Peer-to-peer RPC framework</span>
+        <h1 id="merge-title">Two machines. One function call. No infrastructure hunt.</h1>
+        <p class="merge-lede">
+          Use Aster when the code you need is behind firewalls, NATs, CGNATs,
+          home routers, cloud networks, or someone else&apos;s infrastructure.
+        </p>
+        <p class="merge-subhead">
+          Aster gives every service a cryptographic address. Machines authenticate
+          in the connection, then capabilities decide which methods can run.
+        </p>
+        <div class="merge-actions">
+          <a class="button primary" href="https://docs.aster.site/docs/quickstart/python">Try it in 60 seconds</a>
+          <a class="button secondary" href="https://docs.aster.site/docs/quickstart/mission-control">Build Mission Control</a>
+        </div>
+      </div>
+
+      <figure class="merge-map">
+        <AsterNetworkMap />
+        <figcaption>
+          Your agent or shell calls services wherever they live: AWS,
+          DigitalOcean, a customer site, or a homelab.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="math-section" aria-labelledby="math-title">
+    <div class="shell math-grid">
+      <div class="math-heading">
+        <span class="meta-label">The trade</span>
+        <h2 id="math-title">Seven layers become one address.</h2>
+        <p>
+          The usual path asks developers to publish and defend a network edge.
+          Aster starts from identity instead.
+        </p>
+      </div>
+
+      <div class="math-panel math-panel--before">
+        <span class="math-label">Without Aster</span>
+        <strong>7</strong>
+        <p>things between you and your service</p>
+        <ul>
+          {obstacles.map((obstacle) => <li>{obstacle}</li>)}
+        </ul>
+      </div>
+
+      <div class="math-panel math-panel--after">
+        <span class="math-label">With Aster</span>
+        <strong>1</strong>
+        <p>address: <code>aster1qx9k7f...</code></p>
+        <ul>
+          {outcomes.map((outcome) => <li>{outcome}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="situations-section" aria-labelledby="situations-title">
+    <div class="shell">
+      <div class="situations-heading">
+        <span class="meta-label">Reach for it when</span>
+        <h2 id="situations-title">The network is the work.</h2>
+      </div>
+
+      <div class="situations-grid">
+        {situations.map((situation) => (
+          <article class="situation">
+            <h3>{situation.title}</h3>
+            <p>{situation.copy}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="proof-section" aria-labelledby="proof-title">
+    <div class="shell proof-grid">
+      <div class="proof-copy">
+        <span class="meta-label">The proof path</span>
+        <h2 id="proof-title">Write the service. Call the address.</h2>
+        <p>
+          No hostname. No port forwarding. No shared secret. The address is
+          the identity, and the call is still a typed RPC.
+        </p>
+      </div>
+
+      <div class="code-panels">
+        <div class="code-panel">
+          <div class="code-chrome">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="code-title">server.py</span>
+          </div>
+          <pre class="code-body"><code set:html={serverCode} /></pre>
+        </div>
+
+        <div class="code-panel">
+          <div class="code-chrome">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="code-title">client.py</span>
+          </div>
+          <pre class="code-body"><code set:html={clientCode} /></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .mockup-a {
+    overflow: hidden;
+  }
+
+  .merge-hero {
+    position: relative;
+    padding: clamp(64px, 8vw, 116px) 0 clamp(48px, 7vw, 88px);
+  }
+
+  .merge-hero::before {
+    content: "";
+    position: absolute;
+    inset: 8% -10vw auto;
+    height: 32rem;
+    background:
+      linear-gradient(90deg, rgba(120, 166, 255, 0.075) 1px, transparent 1px),
+      linear-gradient(rgba(120, 166, 255, 0.075) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at 62% 46%, #000 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .merge-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.74fr) minmax(0, 1.26fr);
+    gap: clamp(30px, 5vw, 70px);
+    align-items: center;
+  }
+
+  .merge-copy {
+    max-width: 39rem;
+  }
+
+  .merge-copy h1 {
+    margin: 12px 0 0;
+    color: var(--cloud-strong);
+    font-size: clamp(46px, 6.9vw, 88px);
+    line-height: 0.92;
+    letter-spacing: -0.074em;
+    text-wrap: balance;
+  }
+
+  .merge-lede {
+    margin: 26px 0 0;
+    color: var(--cloud);
+    font-size: clamp(19px, 1.9vw, 24px);
+    line-height: 1.42;
+    letter-spacing: -0.024em;
+  }
+
+  .merge-subhead {
+    margin: 18px 0 0;
+    color: var(--mist);
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .merge-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  .merge-map {
+    position: relative;
+    margin: 0;
+    border: 1px solid rgba(163, 178, 196, 0.11);
+    border-radius: 24px;
+    background:
+      linear-gradient(180deg, rgba(17, 24, 33, 0.82), rgba(10, 15, 21, 0.92)),
+      radial-gradient(circle at 62% 16%, rgba(97, 214, 194, 0.13), transparent 36%);
+    box-shadow: var(--shadow-dark);
+    overflow: auto hidden;
+  }
+
+  .merge-map figcaption {
+    margin: 0;
+    padding: 15px 18px 17px;
+    color: var(--mist);
+    font-size: 14px;
+    line-height: 1.5;
+    border-top: 1px solid rgba(163, 178, 196, 0.1);
+  }
+
+  .math-section,
+  .situations-section,
+  .proof-section {
+    padding: clamp(42px, 6vw, 76px) 0;
+  }
+
+  .math-grid {
+    display: grid;
+    grid-template-columns: minmax(16rem, 0.76fr) repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .math-heading {
+    align-self: center;
+    padding-right: clamp(0px, 2vw, 18px);
+  }
+
+  .math-heading h2,
+  .situations-heading h2,
+  .proof-copy h2 {
+    margin: 12px 0 0;
+    color: var(--cloud-strong);
+    font-size: clamp(34px, 4.4vw, 56px);
+    line-height: 0.98;
+    letter-spacing: -0.058em;
+    text-wrap: balance;
+  }
+
+  .math-heading p,
+  .proof-copy p {
+    margin: 18px 0 0;
+    color: var(--mist);
+    font-size: 17px;
+    line-height: 1.62;
+  }
+
+  .math-panel {
+    min-height: 32rem;
+    padding: 30px 26px;
+    border: 1px solid rgba(163, 178, 196, 0.11);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.024);
+  }
+
+  .math-panel--before {
+    border-color: rgba(140, 152, 166, 0.16);
+  }
+
+  .math-panel--after {
+    border-color: rgba(97, 214, 194, 0.18);
+    background:
+      radial-gradient(ellipse at 30% 12%, rgba(97, 214, 194, 0.055), transparent 56%),
+      rgba(255, 255, 255, 0.026);
+  }
+
+  .math-label {
+    color: var(--mist-2);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+  }
+
+  .math-panel strong {
+    display: block;
+    margin-top: 14px;
+    color: var(--cloud-strong);
+    font-size: clamp(78px, 9vw, 124px);
+    font-weight: 790;
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+  }
+
+  .math-panel--after strong {
+    color: var(--relay);
+    text-shadow: 0 0 70px rgba(97, 214, 194, 0.17);
+  }
+
+  .math-panel p {
+    margin: 14px 0 0;
+    color: var(--mist);
+    font-size: 16px;
+  }
+
+  .math-panel code {
+    color: var(--relay);
+    font-family: var(--mono);
+    font-size: 14px;
+  }
+
+  .math-panel ul {
+    display: grid;
+    gap: 10px;
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .math-panel li {
+    position: relative;
+    padding-left: 17px;
+    color: var(--cloud);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .math-panel li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--mist-2);
+  }
+
+  .math-panel--after li::before {
+    background: var(--relay);
+  }
+
+  .situations-heading {
+    max-width: 44rem;
+  }
+
+  .situations-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .situation {
+    min-height: 14rem;
+    padding: 24px;
+    border: 1px solid rgba(163, 178, 196, 0.1);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.026);
+    transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+  }
+
+  .situation:hover {
+    border-color: rgba(97, 214, 194, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+    transform: translateY(-2px);
+  }
+
+  .situation h3 {
+    margin: 0;
+    color: var(--cloud-strong);
+    font-size: 19px;
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+  }
+
+  .situation p {
+    margin: 12px 0 0;
+    color: var(--mist);
+    font-size: 15px;
+    line-height: 1.58;
+  }
+
+  .proof-grid {
+    display: grid;
+    grid-template-columns: minmax(17rem, 0.44fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 48px);
+    align-items: start;
+  }
+
+  .code-panels {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .code-panel {
+    border: 1px solid var(--border-dark);
+    border-radius: 18px;
+    background: rgba(11, 15, 20, 0.92);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+  }
+
+  .code-chrome {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(163, 178, 196, 0.08);
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--steel);
+  }
+
+  .code-title {
+    margin-left: 6px;
+    color: var(--mist-2);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+
+  .code-body {
+    margin: 0;
+    padding: 20px;
+    color: var(--cloud);
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.72;
+    overflow-x: auto;
+  }
+
+  .code-body code {
+    font-family: inherit;
+  }
+
+  .hl-kw { color: var(--signal); }
+  .hl-str { color: var(--relay); }
+  .hl-dec { color: var(--trust); }
+  .hl-cmt { color: var(--mist-2); }
+  .hl-cls { color: var(--cloud-strong); font-weight: 600; }
+  .hl-fn { color: var(--cloud); }
+  .hl-num { color: var(--trust); }
+
+  @media (max-width: 1040px) {
+    .merge-grid,
+    .math-grid,
+    .proof-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .math-panel {
+      min-height: 0;
+    }
+
+    .situations-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .merge-hero {
+      padding-top: 46px;
+    }
+
+    .merge-map :global(.aster-network-map) {
+      min-width: 44rem;
+    }
+
+    .math-panel,
+    .situation {
+      border-radius: 16px;
+      padding: 22px;
+    }
+  }
+</style>

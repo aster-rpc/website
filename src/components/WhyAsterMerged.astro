@@ -1,0 +1,1135 @@
+---
+import AsterNetworkMap from './AsterNetworkMap.astro';
+
+const triggers = [
+  {
+    title: 'Behind a firewall or NAT',
+    desc: 'Your service runs on a network you don\'t fully control — corporate VPC, cloud subnet, home router.',
+  },
+  {
+    title: 'On Starlink or mobile',
+    desc: 'CGNAT means no public IP. Port forwarding isn\'t an option. Neither is a static address.',
+  },
+  {
+    title: 'AI agents calling remote tools',
+    desc: 'Your LLM needs to call a tool on your home lab, a GPU box, or a colleague\'s machine — not through a proxy.',
+  },
+  {
+    title: 'Multi-cloud and home labs',
+    desc: 'Services in AWS, DigitalOcean, and your home lab. No VPNs or tunnels between them. Share access with friends and coworkers — scoped to exactly what they need.',
+  },
+  {
+    title: 'Software in customer infrastructure',
+    desc: 'You ship agents into customer VPCs or on-prem racks. They phone home — without customers opening firewall rules. Fan out to hundreds of sites with no extra infrastructure.',
+  },
+  {
+    title: 'Peer-to-peer by default',
+    desc: 'Machines connect directly. No message broker, no service mesh, no infrastructure you have to run in the middle.',
+  },
+];
+
+const serverLines = [
+  { text: '  Aster RPC — encrypted P2P calls, any language', tone: 'hero' },
+  { text: '  # server.py — 12 lines, that\'s the whole service', tone: 'comment' },
+  { text: '  @service(name="Fleet", version=1)', tone: 'schema' },
+  { text: '  class Fleet:', tone: 'code' },
+  { text: '      @rpc()', tone: 'schema' },
+  { text: '      async def status(self, req) -> StatusResponse:', tone: 'code' },
+  { text: '          return StatusResponse(hostname=platform.node(), ...)', tone: 'code' },
+  { text: '  # Start it', tone: 'comment' },
+  { text: '$ python server.py', tone: 'prompt' },
+  { text: '  aster14Y5xCM3ErHLsxX6CVsGPmPwtMFmkPEDLB7kDQfCdLZohfWBR9syYFfgR8nTo3ww34uot5HXTE', tone: 'endpoint' },
+];
+
+const clientLines = [
+  { text: '  # Call it — from anywhere, any language', tone: 'comment' },
+  { text: '$ aster call ', tone: 'prompt', suffix: 'aster14Y5xCM...HXTE Fleet.status \'{"node_id": "edge-7"}\'' },
+  { text: '{', tone: 'json' },
+  { text: '  "node_id": "edge-7",', tone: 'json' },
+  { text: '  "hostname": "Emruls-MacBook-Pro.local",', tone: 'json' },
+  { text: '  "status": "healthy",', tone: 'json' },
+  { text: '  "uptime_secs": 3812688,', tone: 'json' },
+  { text: '  "cpu_count": 14,', tone: 'json' },
+  { text: '  "version": "0.1.0"', tone: 'json' },
+  { text: '}', tone: 'json' },
+];
+
+const languages = [
+  { label: 'Python', tag: 'Py', state: 'Shipping 0.1.2', tone: 'alpha' },
+  { label: 'TypeScript', tag: 'TS', state: 'Shipping 0.1.2', tone: 'alpha' },
+  { label: 'Java', tag: 'Jv', state: 'In progress', tone: 'progress' },
+  { label: '.NET', tag: '.N', state: 'In progress', tone: 'progress' },
+  { label: 'Kotlin', tag: 'Kt', state: 'In progress', tone: 'progress' },
+  { label: 'Go', tag: 'Go', state: 'In progress', tone: 'progress' },
+  { label: 'Rust', tag: 'Rs', state: 'Planned', tone: 'planned' },
+];
+
+const S = 0.34;
+const LEFT_CURSOR = serverLines.length * S;
+const RIGHT_START = LEFT_CURSOR + 0.6;
+const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
+---
+
+<div class="merged-page">
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="m-hero">
+    <div class="shell m-hero-inner">
+      <h1 class="m-headline">
+        <span class="m-headline-setup m-headline-line">No VPNs. No NAT gateways. No port forwarding.</span>
+        <span class="m-headline-hero m-headline-line">Connect your AI agents to your code - anywhere.</span>
+        <span class="m-headline-accent m-headline-line">Aster punches through everything.</span>
+      </h1>
+    </div>
+  </section>
+
+  <!-- ═══════ NETWORK MAP ═══════ -->
+  <section class="m-map-section">
+    <div class="shell">
+      <figure class="m-map-card animate-on-scroll">
+        <div class="m-map-wrap">
+          <AsterNetworkMap />
+        </div>
+        <figcaption>
+          Firewalls. NATs. VPNs. DNS. Certificates. API keys — on <em>both sides</em> —
+          just to call one function. Leave the mess behind with Aster.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ═══════ BEFORE / AFTER ═══════ -->
+  <section class="m-compare-section">
+    <div class="shell">
+      <div class="m-compare-header animate-on-scroll">
+        <p class="m-section-kicker">The infrastructure tax</p>
+        <h2 class="m-section-title">What it costs you today vs. with Aster</h2>
+      </div>
+      <div class="m-compare-grid animate-on-scroll">
+
+        <!-- BEFORE -->
+        <div class="m-card m-card-before">
+          <div class="m-card-label">Without Aster</div>
+          <div class="m-card-big">8</div>
+          <div class="m-card-subtitle">things to configure, maintain, and debug</div>
+          <ul class="m-card-list">
+            <li><span class="m-bullet" aria-hidden="true"></span><span>VPNs — another tunnel to manage</span></li>
+            <li><span class="m-bullet" aria-hidden="true"></span><span>Firewall rules — both sides, per-port</span></li>
+            <li><span class="m-bullet" aria-hidden="true"></span><span>NAT traversal — and good luck with CGNAT</span></li>
+            <li><span class="m-bullet" aria-hidden="true"></span><span>TLS certificates — obtain, renew, pray</span></li>
+            <li><span class="m-bullet" aria-hidden="true"></span><span>DNS records — just to give it a name</span></li>
+            <li><span class="m-bullet" aria-hidden="true"></span><span>API keys — shared secrets that leak</span></li>
+            <li><span class="m-bullet" aria-hidden="true"></span><span>Load balancer or proxy — another box to run</span></li>
+            <li><span class="m-bullet" aria-hidden="true"></span><span>Port forwarding — and hope your IP doesn't change</span></li>
+          </ul>
+        </div>
+
+        <!-- AFTER -->
+        <div class="m-card m-card-after">
+          <div class="m-card-label">With Aster</div>
+          <div class="m-card-big">1</div>
+          <div class="m-card-subtitle">address — a public key</div>
+          <div class="m-address">aster14TudWqdmQLgjyczpq19BnP8f4F...</div>
+          <ul class="m-perks">
+            <li><span class="m-check" aria-hidden="true"></span><span>Punches through firewalls, NATs, and CGNATs</span></li>
+            <li><span class="m-check" aria-hidden="true"></span><span>Mutual auth at the QUIC handshake</span></li>
+            <li><span class="m-check" aria-hidden="true"></span><span>No certificates, no DNS, no shared secrets</span></li>
+            <li><span class="m-check" aria-hidden="true"></span><span>Direct peer-to-peer — no proxy in the middle</span></li>
+            <li><span class="m-check" aria-hidden="true"></span><span>Share the address with friends and coworkers</span></li>
+            <li class="m-perk-soon"><span class="m-soon-dot" aria-hidden="true"></span><span>Load balancing, failover, and HA — coming soon</span></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ TERMINALS ═══════ -->
+  <section class="m-code-section">
+    <div class="shell">
+      <div class="m-code-header animate-on-scroll">
+        <p class="m-section-kicker">This is all it takes</p>
+        <h2 class="m-section-title">A few lines to connect. From anywhere.</h2>
+      </div>
+
+      <div class="m-terminals" data-terminals aria-label="Animated terminal demo">
+        <!-- LEFT: server -->
+        <div class="m-term">
+          <div class="m-term__glow" aria-hidden="true"></div>
+          <div class="m-term__mesh" aria-hidden="true"></div>
+          <div class="m-term__scan" aria-hidden="true"></div>
+          <div class="m-term-chrome">
+            <div class="m-term-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="m-term-title">aster / server</div>
+            <div class="m-term-status">Fleet</div>
+          </div>
+          <div class="m-term-body">
+            <div class="m-term-output">
+              {serverLines.map((l, i) => (
+                <div class={`m-tl m-tl--${l.tone}`} style={`animation-delay: ${(i * S).toFixed(2)}s`}>
+                  <span class="m-tl-text">{l.text}</span>
+                </div>
+              ))}
+              <span class="m-term-cursor" data-cursor-delay={LEFT_CURSOR}></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: client -->
+        <div class="m-term">
+          <div class="m-term__glow" aria-hidden="true"></div>
+          <div class="m-term__mesh" aria-hidden="true"></div>
+          <div class="m-term__scan" aria-hidden="true"></div>
+          <div class="m-term-chrome">
+            <div class="m-term-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="m-term-title">aster / client</div>
+            <div class="m-term-status">calling</div>
+          </div>
+          <div class="m-term-body">
+            <div class="m-term-output">
+              {clientLines.map((l, i) => (
+                <div class={`m-tl m-tl--${l.tone}`} style={`animation-delay: ${(RIGHT_START + i * S).toFixed(2)}s`}>
+                  <span class="m-tl-text">{l.text}</span>
+                  {l.suffix && <span class="m-tl-paste">{l.suffix}</span>}
+                </div>
+              ))}
+              <span class="m-term-cursor" data-cursor-delay={RIGHT_CURSOR}></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="m-code-footnote animate-on-scroll">
+        No hostname. No port. No shared secret. The address <em>is</em> the identity.
+      </p>
+
+      <div class="m-lang-strip animate-on-scroll" aria-label="Language support">
+        <div class="m-lang-copy">
+          <span class="m-section-kicker">Language support</span>
+          <p>Cross-language by design — use whatever language fits the job.</p>
+          <p>Python and TypeScript shipping now.<br/>Java, .NET, Kotlin, and Go are in progress.<br/>Rust on roadmap.</p>
+        </div>
+        <div class="m-lang-grid">
+          {languages.map((lang) => (
+            <div class={`m-lang-badge m-lang-badge--${lang.tone}`}>
+              <span class="m-lang-mark">{lang.tag}</span>
+              <span class="m-lang-info">
+                <strong>{lang.label}</strong>
+                <small>{lang.state}</small>
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ IDENTITY & TRUST ═══════ -->
+  <section class="m-identity-section">
+    <div class="shell">
+      <div class="m-identity-header animate-on-scroll">
+        <p class="m-section-kicker">How it works</p>
+        <h2 class="m-section-title">Identity is in the connection, not bolted on.</h2>
+      </div>
+      <div class="m-identity-grid">
+        <div class="m-identity-card animate-on-scroll">
+          <h3 class="m-identity-card-title">Connections go to who, not where</h3>
+          <p class="m-identity-card-desc">Every machine gets a permanent cryptographic address. Move it to a different network, change your IP, roam between Wi-Fi and cellular — the address stays the same. You dial the machine, not its location.</p>
+        </div>
+        <div class="m-identity-card animate-on-scroll">
+          <h3 class="m-identity-card-title">Trust built-in</h3>
+          <p class="m-identity-card-desc">Both sides prove who they are before your code runs. You control exactly who can connect, which services they can call, and when their access expires. Replaces mTLS.</p>
+        </div>
+        <div class="m-identity-card animate-on-scroll">
+          <h3 class="m-identity-card-title">Agents discover and verify services</h3>
+          <p class="m-identity-card-desc">An agent can find a service by what it does, not where it lives. The service contract is verified automatically — your Python service and their TypeScript client agree on the interface without sharing files.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ TRIGGERS ═══════ -->
+  <section class="m-triggers-section">
+    <div class="shell">
+      <p class="m-section-kicker">When to use it</p>
+      <h2 class="m-section-title">Reach for Aster when…</h2>
+      <div class="m-triggers-grid">
+        {triggers.map((t) => (
+          <div class="m-trigger-card animate-on-scroll">
+            <h3 class="m-trigger-title">{t.title}</h3>
+            <p class="m-trigger-desc">{t.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ CTA ═══════ -->
+  <section class="m-cta-section">
+    <div class="shell">
+      <div class="m-cta-card animate-on-scroll">
+        <h2 class="m-cta-heading">Try out the walkthrough</h2>
+        <div class="m-cta-install">
+          <div class="m-install-row">
+            <span class="m-install-label">Python</span>
+            <code>pip install aster-rpc aster-cli</code>
+          </div>
+          <div class="m-install-row">
+            <span class="m-install-label">TypeScript</span>
+            <code>npm install @aster-rpc/aster</code>
+          </div>
+        </div>
+        <div class="m-cta-buttons">
+          <a class="button primary" href="https://docs.aster.site/docs/quickstart/mission-control">Build Mission Control</a>
+          <a class="button secondary" href="https://docs.aster.site/docs/quickstart/python">Quickstart</a>
+        </div>
+        <a class="m-cta-story" href="/blog/why-i-built-aster">Read the origin story &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<style>
+  /* ═══════════════════════════════════
+     HERO
+     ═══════════════════════════════════ */
+  .m-hero {
+    padding: 24px 0 16px;
+    text-align: center;
+    background: radial-gradient(ellipse at 50% 80%, rgba(255, 107, 74, 0.045), transparent 55%);
+  }
+
+  .m-hero-inner > * {
+    animation: m-fade-up 0.72s cubic-bezier(0.19, 1, 0.22, 1) both;
+  }
+
+  .m-headline {
+    font-size: clamp(26px, 3.8vw, 52px);
+    line-height: 1.45;
+    letter-spacing: -0.03em;
+    font-weight: 720;
+    margin: 0;
+    color: var(--cloud-strong);
+    animation-delay: 0.08s;
+  }
+
+  .m-headline-line {
+    display: block;
+  }
+
+  .m-headline-setup {
+    color: var(--mist);
+    font-weight: 550;
+  }
+
+  .m-headline-hero {
+    font-weight: 780;
+    color: #fff;
+  }
+
+  .m-headline-accent {
+    color: rgba(255, 107, 74, 0.8);
+    font-weight: 650;
+  }
+
+  .m-map-card figcaption em {
+    color: var(--cloud);
+    font-style: normal;
+    font-weight: 550;
+  }
+
+  .m-map-scroll-hint {
+    display: none;
+  }
+
+  /* ═══════════════════════════════════
+     NETWORK MAP
+     ═══════════════════════════════════ */
+  .m-map-section {
+    padding: 0 0 56px;
+  }
+
+  .m-map-card {
+    position: relative;
+    margin: 0;
+    border: 1px solid rgba(163, 178, 196, 0.11);
+    border-radius: 24px;
+    background:
+      linear-gradient(180deg, rgba(17, 24, 33, 0.82), rgba(10, 15, 21, 0.92)),
+      radial-gradient(circle at 60% 30%, rgba(120, 166, 255, 0.14), transparent 40%);
+    box-shadow: var(--shadow-dark);
+    overflow: hidden;
+  }
+
+  .m-map-wrap {
+    width: 100%;
+    overflow: auto hidden;
+  }
+
+  .m-map-card figcaption {
+    margin: 0;
+    padding: 16px 20px 18px;
+    color: var(--mist);
+    font-size: 14px;
+    line-height: 1.5;
+    border-top: 1px solid rgba(163, 178, 196, 0.1);
+  }
+
+  /* ═══════════════════════════════════
+     SHARED SECTION STYLES
+     ═══════════════════════════════════ */
+  .m-section-kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mist-2);
+    margin: 0 0 14px;
+  }
+
+  .m-section-title {
+    margin: 0;
+    font-size: clamp(32px, 4vw, 50px);
+    line-height: 1.02;
+    letter-spacing: -0.05em;
+    color: var(--cloud-strong);
+  }
+
+  /* ═══════════════════════════════════
+     COMPARE: BEFORE / AFTER
+     ═══════════════════════════════════ */
+  .m-compare-section {
+    padding: 10px 0 56px;
+  }
+
+  .m-compare-header {
+    margin-bottom: 28px;
+  }
+
+  .m-compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .m-card {
+    padding: 40px 34px;
+    border-radius: var(--radius-xl);
+  }
+
+  .m-card-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .m-card-big {
+    font-size: clamp(72px, 10vw, 110px);
+    font-weight: 800;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    margin-bottom: 6px;
+  }
+
+  .m-card-subtitle {
+    font-size: clamp(16px, 1.4vw, 19px);
+    color: var(--mist);
+    margin-bottom: 24px;
+  }
+
+  /* ── Before card ── */
+  .m-card-before {
+    border: 1px solid rgba(255, 107, 74, 0.14);
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255, 107, 74, 0.04), transparent 60%),
+      rgba(255, 107, 74, 0.015);
+  }
+  .m-card-before .m-card-label { color: rgba(255, 107, 74, 0.7); }
+  .m-card-before .m-card-big {
+    color: #FF6B4A;
+    text-shadow: 0 0 80px rgba(255, 107, 74, 0.18);
+  }
+
+  /* ── After card ── */
+  .m-card-after {
+    border: 1px solid rgba(97, 214, 194, 0.14);
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(97, 214, 194, 0.04), transparent 60%),
+      rgba(97, 214, 194, 0.015);
+  }
+  .m-card-after .m-card-label { color: rgba(97, 214, 194, 0.7); }
+  .m-card-after .m-card-big {
+    color: var(--relay);
+    text-shadow: 0 0 80px rgba(97, 214, 194, 0.18);
+  }
+
+  /* ── Obstacle list ── */
+  .m-card-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .m-card-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 107, 74, 0.06);
+    font-size: 14px;
+    color: var(--cloud);
+    line-height: 1.45;
+  }
+  .m-card-list li:last-child { border-bottom: none; }
+  .m-bullet {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 107, 74, 0.55);
+    flex-shrink: 0;
+  }
+
+  /* ── Address badge + perks ── */
+  .m-address {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: clamp(13px, 1.1vw, 15px);
+    color: var(--relay);
+    padding: 9px 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(97, 214, 194, 0.2);
+    background: rgba(97, 214, 194, 0.06);
+    margin-bottom: 24px;
+    letter-spacing: 0.02em;
+  }
+  .m-perks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .m-perks li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 0;
+    font-size: 14px;
+    color: var(--cloud);
+    line-height: 1.45;
+  }
+  .m-check {
+    width: 18px; height: 18px;
+    border-radius: 5px;
+    background: rgba(97, 214, 194, 0.1);
+    border: 1px solid rgba(97, 214, 194, 0.22);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .m-check::after {
+    content: '';
+    position: absolute;
+    left: 5px; top: 2px;
+    width: 5px; height: 9px;
+    border-right: 2px solid var(--relay);
+    border-bottom: 2px solid var(--relay);
+    transform: rotate(45deg);
+  }
+
+  .m-perk-soon {
+    opacity: 0.55;
+  }
+
+  .m-soon-dot {
+    width: 18px; height: 18px;
+    border-radius: 5px;
+    border: 1px dashed rgba(97, 214, 194, 0.3);
+    flex-shrink: 0;
+  }
+
+  /* ═══════════════════════════════════
+     ANIMATED TERMINALS
+     ═══════════════════════════════════ */
+  .m-code-section {
+    padding: 10px 0 40px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(97, 214, 194, 0.03), transparent 50%);
+  }
+
+  .m-code-header { margin-bottom: 32px; }
+
+  .m-terminals {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* ── Terminal shell ── */
+  .m-term {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+    padding: 0.75rem;
+    border: 1px solid rgba(120, 166, 255, 0.14);
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(circle at 20% 18%, rgba(97, 214, 194, 0.18), transparent 24%),
+      radial-gradient(circle at 82% 70%, rgba(120, 166, 255, 0.2), transparent 30%),
+      linear-gradient(180deg, rgba(19, 26, 34, 0.96), rgba(8, 12, 18, 0.92));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 28px 70px rgba(0, 0, 0, 0.3),
+      0 0 0 8px rgba(120, 166, 255, 0.03);
+    overflow: hidden;
+    color-scheme: dark;
+  }
+
+  /* ── Decorative layers ── */
+  .m-term__glow,
+  .m-term__mesh,
+  .m-term__scan {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .m-term__glow {
+    background:
+      radial-gradient(circle at 22% 20%, rgba(97, 214, 194, 0.2), transparent 20%),
+      radial-gradient(circle at 80% 68%, rgba(120, 166, 255, 0.18), transparent 28%),
+      linear-gradient(135deg, rgba(230, 192, 107, 0.06), transparent 34%);
+    filter: blur(4px);
+    opacity: 0.9;
+    z-index: -3;
+  }
+
+  .m-term__mesh {
+    background:
+      linear-gradient(90deg, rgba(120, 166, 255, 0.07) 1px, transparent 1px),
+      linear-gradient(rgba(120, 166, 255, 0.07) 1px, transparent 1px);
+    background-size: 46px 46px;
+    mask-image: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0.9), transparent 72%);
+    opacity: 0.24;
+    z-index: -2;
+  }
+
+  .m-term__scan {
+    height: 34%;
+    background: linear-gradient(180deg, transparent 0%, rgba(97, 214, 194, 0.08) 48%, transparent 100%);
+    opacity: 0.5;
+    transform: translateY(-120%);
+    z-index: 2;
+  }
+
+  .m-terminals.playing .m-term__scan {
+    animation: m-scan 7.2s linear infinite;
+  }
+
+  /* ── Chrome bar ── */
+  .m-term-chrome {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    min-height: 2.6rem;
+    padding: 0 0.7rem;
+    border: 1px solid rgba(120, 166, 255, 0.14);
+    border-radius: 18px 18px 10px 10px;
+    background: rgba(7, 10, 15, 0.74);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(14px);
+  }
+
+  .m-term-dots {
+    display: flex;
+    gap: 0.35rem;
+  }
+  .m-term-dots span {
+    width: 0.55rem; height: 0.55rem;
+    border-radius: 999px;
+  }
+  .m-term-dots span:nth-child(1) { background: #ff6b6b; }
+  .m-term-dots span:nth-child(2) { background: var(--trust); }
+  .m-term-dots span:nth-child(3) { background: var(--relay); }
+
+  .m-term-title,
+  .m-term-status {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .m-term-title { color: rgba(217, 225, 234, 0.55); }
+  .m-term-status { justify-self: end; color: var(--relay); }
+
+  /* ── Terminal body & lines ── */
+  .m-term-body {
+    position: relative;
+    z-index: 3;
+    flex: 1;
+    display: grid;
+    align-content: end;
+    padding: clamp(0.7rem, 2vw, 1.2rem);
+  }
+
+  .m-term-output {
+    position: relative;
+    min-height: 18rem;
+    padding: 0.6rem 0 0;
+    overflow: hidden;
+    font-family: var(--mono);
+    font-size: clamp(0.6rem, 0.82vw, 0.82rem);
+    line-height: 1.58;
+    color: rgba(217, 225, 234, 0.82);
+  }
+
+  .m-tl {
+    display: flex;
+    min-width: 0;
+    white-space: pre;
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .m-terminals.playing .m-tl {
+    animation: m-tl-reveal 0.58s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    /* animation-delay set via inline style */
+  }
+
+  .m-tl-text,
+  .m-tl-paste {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .m-tl-paste {
+    color: var(--signal);
+  }
+
+  .m-terminals.playing .m-tl-paste {
+    animation: m-paste-flash 2.5s ease-in-out infinite;
+  }
+
+  /* ── Line tone colors ── */
+  .m-tl--hero,
+  .m-tl--prompt   { color: var(--relay); }
+  .m-tl--hero     { font-weight: 700; }
+  .m-tl--comment  { color: rgba(217, 225, 234, 0.48); }
+  .m-tl--schema   { color: var(--trust); }
+  .m-tl--endpoint { color: rgba(120, 166, 255, 0.78); }
+  .m-tl--json     { color: rgba(217, 225, 234, 0.78); }
+
+  /* ── Cursor ── */
+  .m-term-cursor {
+    display: inline-block;
+    width: 0.5rem;
+    height: 1.05em;
+    margin-left: 0.12rem;
+    vertical-align: -0.12em;
+    background: var(--relay);
+    box-shadow: 0 0 16px rgba(97, 214, 194, 0.6);
+    opacity: 0;
+  }
+
+  .m-term-cursor.blinking {
+    opacity: 1;
+    animation: m-cursor-blink 1s steps(2, start) infinite;
+  }
+
+  /* ── Terminal keyframes ── */
+  @keyframes m-tl-reveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes m-scan {
+    0% { transform: translateY(-120%); }
+    58%, 100% { transform: translateY(320%); }
+  }
+
+  @keyframes m-cursor-blink {
+    50% { opacity: 0; }
+  }
+
+  @keyframes m-paste-flash {
+    0%, 100% { color: var(--signal); }
+    50% { color: var(--cloud-strong); }
+  }
+
+  .m-code-footnote {
+    text-align: center;
+    font-size: clamp(17px, 1.5vw, 20px);
+    color: var(--mist);
+    margin: 36px 0 0;
+    line-height: 1.55;
+  }
+  .m-code-footnote em {
+    color: var(--relay);
+    font-style: italic;
+  }
+
+  /* ═══════════════════════════════════
+     LANGUAGE STRIP
+     ═══════════════════════════════════ */
+  .m-lang-strip {
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.9fr) minmax(0, 1.1fr);
+    gap: 30px;
+    align-items: start;
+    margin-top: 48px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border-dark);
+  }
+
+  .m-lang-copy p {
+    margin: 8px 0 0;
+    color: var(--mist);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .m-lang-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 10px;
+  }
+
+  .m-lang-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid rgba(163, 178, 196, 0.11);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.032);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  }
+
+
+  .m-lang-mark {
+    display: inline-grid;
+    place-items: center;
+    width: 36px; height: 36px;
+    flex: 0 0 auto;
+    border-radius: 12px;
+    border: 1px solid rgba(163, 178, 196, 0.14);
+    background: rgba(11, 15, 20, 0.74);
+    color: var(--cloud-strong);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 650;
+  }
+
+  .m-lang-info {
+    display: grid;
+    gap: 3px;
+    min-width: 0;
+  }
+  .m-lang-info strong {
+    color: var(--cloud-strong);
+    font-size: 13px;
+    line-height: 1.1;
+  }
+  .m-lang-info small {
+    color: var(--mist-2);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .m-lang-badge--alpha {
+    border-color: rgba(97, 214, 194, 0.18);
+  }
+  .m-lang-badge--alpha .m-lang-mark,
+  .m-lang-badge--alpha .m-lang-info small {
+    color: var(--relay);
+  }
+
+  .m-lang-badge--progress {
+    border-color: rgba(120, 166, 255, 0.18);
+  }
+  .m-lang-badge--progress .m-lang-mark,
+  .m-lang-badge--progress .m-lang-info small {
+    color: var(--signal);
+  }
+
+  /* ═══════════════════════════════════
+     IDENTITY & TRUST
+     ═══════════════════════════════════ */
+  .m-identity-section {
+    padding: 64px 0 20px;
+  }
+
+  .m-identity-header {
+    margin-bottom: 28px;
+  }
+
+  .m-identity-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .m-identity-card {
+    padding: 28px 26px;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(120, 166, 255, 0.12);
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(120, 166, 255, 0.03), transparent 60%),
+      rgba(120, 166, 255, 0.012);
+  }
+
+  .m-identity-card-title {
+    margin: 0 0 10px;
+    font-size: 17px;
+    font-weight: 640;
+    color: var(--cloud-strong);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .m-identity-card-desc {
+    margin: 0;
+    font-size: 14px;
+    color: var(--mist);
+    line-height: 1.55;
+  }
+
+  /* ═══════════════════════════════════
+     TRIGGER CONDITIONS
+     ═══════════════════════════════════ */
+  .m-triggers-section {
+    padding: 64px 0 40px;
+  }
+
+  .m-triggers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 30px;
+  }
+
+  .m-trigger-card {
+    padding: 26px 24px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-dark);
+    background: rgba(17, 24, 33, 0.55);
+    transition: border-color 0.22s ease, transform 0.22s ease, background 0.22s ease;
+  }
+  .m-trigger-card:hover {
+    border-color: rgba(97, 214, 194, 0.18);
+    background: rgba(17, 24, 33, 0.75);
+    transform: translateY(-2px);
+  }
+
+  .m-trigger-title {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 620;
+    color: var(--cloud-strong);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .m-trigger-desc {
+    margin: 0;
+    font-size: 14px;
+    color: var(--mist);
+    line-height: 1.55;
+  }
+
+  /* ═══════════════════════════════════
+     CTA
+     ═══════════════════════════════════ */
+  .m-cta-section {
+    padding: 30px 0 80px;
+  }
+
+  .m-cta-card {
+    text-align: center;
+    padding: 52px 36px 44px;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-dark);
+    background: linear-gradient(180deg, rgba(18, 25, 35, 0.92), rgba(12, 18, 26, 0.96));
+    box-shadow: var(--shadow-dark);
+  }
+
+  .m-cta-heading {
+    margin: 0 0 28px;
+    font-size: clamp(26px, 3.4vw, 40px);
+    letter-spacing: -0.04em;
+    color: var(--cloud-strong);
+    line-height: 1.05;
+  }
+
+  .m-cta-install {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .m-install-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 14px;
+  }
+
+  .m-install-label {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mist-2);
+    min-width: 80px;
+    text-align: right;
+  }
+
+  .m-install-row code {
+    color: var(--relay);
+    font-family: var(--mono);
+    background: rgba(97, 214, 194, 0.05);
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(97, 214, 194, 0.1);
+  }
+
+  .m-cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .m-cta-story {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 15px;
+    color: var(--cloud);
+    transition: color 0.18s ease;
+    letter-spacing: -0.01em;
+  }
+  .m-cta-story:hover { color: var(--relay); }
+
+  /* ═══════════════════════════════════
+     ANIMATIONS
+     ═══════════════════════════════════ */
+  @keyframes m-fade-up {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.65s cubic-bezier(0.19, 1, 0.22, 1),
+                transform 0.65s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ═══════════════════════════════════
+     RESPONSIVE
+     ═══════════════════════════════════ */
+  @media (max-width: 900px) {
+    .m-hero { padding: 100px 0 40px; }
+    .m-compare-grid { grid-template-columns: 1fr; }
+    .m-terminals    { grid-template-columns: 1fr; }
+    .m-lang-strip   { grid-template-columns: 1fr; }
+    .m-lang-grid    { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .m-identity-grid { grid-template-columns: 1fr; }
+    .m-triggers-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .m-hero { padding: 60px 0 24px; }
+    .m-headline { font-size: 14px; line-height: 1.55; letter-spacing: -0.01em; font-weight: 680; }
+    .m-card { padding: 30px 22px; }
+    .m-triggers-grid { grid-template-columns: 1fr; }
+    .m-lang-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .m-cta-card { padding: 36px 20px 32px; }
+    .m-install-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .m-install-label { text-align: left; min-width: auto; }
+    .m-cta-buttons { flex-direction: column; align-items: center; }
+    .m-cta-buttons .button { width: 100%; max-width: 280px; }
+
+    /* Map scales down on mobile instead of scrolling */
+  }
+
+  /* ═══════════════════════════════════
+     REDUCED MOTION
+     ═══════════════════════════════════ */
+  @media (prefers-reduced-motion: reduce) {
+    .m-hero-inner > * {
+      animation: none;
+      opacity: 1;
+    }
+    .animate-on-scroll {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .m-tl {
+      opacity: 1;
+      transform: none;
+    }
+    .m-terminals.playing .m-tl,
+    .m-terminals.playing .m-tl-paste,
+    .m-term__scan,
+    .m-term-cursor.blinking {
+      animation: none;
+    }
+    .m-term-cursor {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  // Scroll-triggered fade-up for general elements
+  const scrollObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+  );
+  document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+    scrollObserver.observe(el);
+  });
+
+  // Terminal playback: trigger line animations + cursor blink on scroll
+  const terminals = document.querySelector('[data-terminals]');
+  if (terminals) {
+    let played = false;
+    const termObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !played) {
+            played = true;
+            terminals.classList.add('playing');
+
+            // Activate each cursor at the right moment
+            terminals.querySelectorAll('.m-term-cursor').forEach((cursor) => {
+              const delay = parseFloat(cursor.dataset.cursorDelay) || 0;
+              setTimeout(() => cursor.classList.add('blinking'), delay * 1000);
+            });
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    termObserver.observe(terminals);
+  }
+</script>
