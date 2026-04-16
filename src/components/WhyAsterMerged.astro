@@ -369,10 +369,10 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
 
   .m-map-card figcaption {
     margin: 0;
-    padding: 16px 20px 18px;
-    color: var(--mist);
-    font-size: 14px;
-    line-height: 1.5;
+    padding: 18px 24px 20px;
+    color: var(--cloud);
+    font-size: 17px;
+    line-height: 1.55;
     border-top: 1px solid rgba(163, 178, 196, 0.1);
   }
 
@@ -594,34 +594,19 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
 
   .m-term__glow {
     background:
-      radial-gradient(circle at 22% 20%, rgba(97, 214, 194, 0.2), transparent 20%),
-      radial-gradient(circle at 80% 68%, rgba(120, 166, 255, 0.18), transparent 28%),
-      linear-gradient(135deg, rgba(230, 192, 107, 0.06), transparent 34%);
-    filter: blur(4px);
-    opacity: 0.9;
+      radial-gradient(circle at 22% 20%, rgba(97, 214, 194, 0.12), transparent 22%),
+      radial-gradient(circle at 80% 68%, rgba(120, 166, 255, 0.1), transparent 28%);
+    filter: blur(6px);
+    opacity: 0.7;
     z-index: -3;
   }
 
   .m-term__mesh {
-    background:
-      linear-gradient(90deg, rgba(120, 166, 255, 0.07) 1px, transparent 1px),
-      linear-gradient(rgba(120, 166, 255, 0.07) 1px, transparent 1px);
-    background-size: 46px 46px;
-    mask-image: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0.9), transparent 72%);
-    opacity: 0.24;
-    z-index: -2;
+    display: none;
   }
 
   .m-term__scan {
-    height: 34%;
-    background: linear-gradient(180deg, transparent 0%, rgba(97, 214, 194, 0.08) 48%, transparent 100%);
-    opacity: 0.5;
-    transform: translateY(-120%);
-    z-index: 2;
-  }
-
-  .m-terminals.playing .m-term__scan {
-    animation: m-scan 7.2s linear infinite;
+    display: none;
   }
 
   /* ── Chrome bar ── */
@@ -1048,7 +1033,7 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
   }
 
   @media (max-width: 640px) {
-    .m-hero { padding: 60px 0 24px; }
+    .m-hero { padding: 20px 0 16px; }
     .m-headline { font-size: 14px; line-height: 1.55; letter-spacing: -0.01em; font-weight: 680; }
     .m-card { padding: 30px 22px; }
     .m-triggers-grid { grid-template-columns: 1fr; }
