@@ -12,7 +12,7 @@ const triggers = [
   },
   {
     title: 'AI agents calling remote tools',
-    desc: 'Your LLM needs to call a tool on your home lab, a GPU box, or a colleague\'s machine — not through a proxy.',
+    desc: 'Your LLM calls tools on your home lab, a GPU box, or a colleague\'s machine. Aster MCP gives you capability-scoped security — allow/deny per method, per agent, with expiry.',
   },
   {
     title: 'Multi-cloud and home labs',
@@ -42,15 +42,17 @@ const serverLines = [
 ];
 
 const clientLines = [
-  { text: '  # Call it — from anywhere, any language', tone: 'comment' },
-  { text: '$ aster call ', tone: 'prompt', suffix: 'aster14Y5xCM...HXTE Fleet.status \'{"node_id": "edge-7"}\'' },
+  { text: '  # Let your AI agent call it via MCP', tone: 'comment' },
+  { text: '$ aster mcp ', tone: 'prompt', suffix: 'aster14Y5xCM...HXTE' },
+  { text: '  MCP server ready — tools discovered:', tone: 'hero' },
+  { text: '    Fleet.status (node_id: string)', tone: 'schema' },
+  { text: '    Fleet.restart (node_id: string)', tone: 'schema' },
+  { text: '', tone: 'code' },
+  { text: '  # Agent called Fleet.status', tone: 'comment' },
   { text: '{', tone: 'json' },
-  { text: '  "node_id": "edge-7",', tone: 'json' },
   { text: '  "hostname": "Emruls-MacBook-Pro.local",', tone: 'json' },
   { text: '  "status": "healthy",', tone: 'json' },
-  { text: '  "uptime_secs": 3812688,', tone: 'json' },
-  { text: '  "cpu_count": 14,', tone: 'json' },
-  { text: '  "version": "0.1.0"', tone: 'json' },
+  { text: '  "uptime_secs": 3812688', tone: 'json' },
   { text: '}', tone: 'json' },
 ];
 
@@ -76,7 +78,7 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
   <section class="m-hero">
     <div class="shell m-hero-inner">
       <h1 class="m-headline">
-        <span class="m-headline-setup m-headline-line">No VPNs. No NAT gateways. No port forwarding.</span>
+        <span class="m-headline-setup m-headline-line">No VPNs. No NATs. No port forwards.</span>
         <span class="m-headline-hero m-headline-line">Connect your AI agents to your code - anywhere.</span>
         <span class="m-headline-accent m-headline-line">Aster punches through everything.</span>
       </h1>
@@ -92,7 +94,7 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
         </div>
         <figcaption>
           Firewalls. NATs. VPNs. DNS. Certificates. API keys — on <em>both sides</em> —
-          just to call one function. Leave the mess behind with Aster.
+          just to call one function. Aster creates authenticated service connections, not network tunnels. Leave the mess behind.
         </figcaption>
       </figure>
     </div>
@@ -182,8 +184,8 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
           <div class="m-term__scan" aria-hidden="true"></div>
           <div class="m-term-chrome">
             <div class="m-term-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-            <div class="m-term-title">aster / client</div>
-            <div class="m-term-status">calling</div>
+            <div class="m-term-title">aster / mcp agent</div>
+            <div class="m-term-status">connected</div>
           </div>
           <div class="m-term-body">
             <div class="m-term-output">
@@ -283,7 +285,10 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
           <a class="button primary" href="https://docs.aster.site/docs/quickstart/mission-control">Build Mission Control</a>
           <a class="button secondary" href="https://docs.aster.site/docs/quickstart/python">Quickstart</a>
         </div>
-        <a class="m-cta-story" href="/blog/why-i-built-aster">Read the origin story &rarr;</a>
+        <div class="m-cta-meta">
+          <span class="m-cta-license">Open source — Apache 2.0</span>
+          <a class="m-cta-story" href="/blog/why-i-built-aster">Read the origin story &rarr;</a>
+        </div>
       </div>
     </div>
   </section>
@@ -990,9 +995,24 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
     margin-bottom: 20px;
   }
 
+  .m-cta-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .m-cta-license {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mist-2);
+  }
+
   .m-cta-story {
     display: inline-block;
-    margin-top: 8px;
     font-size: 15px;
     color: var(--cloud);
     transition: color 0.18s ease;
@@ -1034,7 +1054,7 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
 
   @media (max-width: 640px) {
     .m-hero { padding: 20px 0 16px; }
-    .m-headline { font-size: 14px; line-height: 1.55; letter-spacing: -0.01em; font-weight: 680; }
+    .m-headline { font-size: 16px; line-height: 1.5; letter-spacing: -0.01em; font-weight: 680; }
     .m-card { padding: 30px 22px; }
     .m-triggers-grid { grid-template-columns: 1fr; }
     .m-lang-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
