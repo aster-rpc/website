@@ -42,18 +42,20 @@ const serverLines = [
 ];
 
 const clientLines = [
-  { text: '  # Let your AI agent call it via MCP', tone: 'comment' },
-  { text: '$ aster mcp ', tone: 'prompt', suffix: 'aster14Y5xCM...HXTE' },
-  { text: '  MCP server ready — tools discovered:', tone: 'hero' },
-  { text: '    Fleet.status (node_id: string)', tone: 'schema' },
-  { text: '    Fleet.restart (node_id: string)', tone: 'schema' },
-  { text: '', tone: 'code' },
-  { text: '  # Agent called Fleet.status', tone: 'comment' },
+  { text: '  # Call it — from anywhere, any language', tone: 'comment' },
+  { text: '$ aster call ', tone: 'prompt', suffix: 'aster14Y5xCM...HXTE Fleet.status \'{"node_id": "edge-7"}\'' },
   { text: '{', tone: 'json' },
   { text: '  "hostname": "Emruls-MacBook-Pro.local",', tone: 'json' },
   { text: '  "status": "healthy",', tone: 'json' },
   { text: '  "uptime_secs": 3812688', tone: 'json' },
   { text: '}', tone: 'json' },
+  { text: '', tone: 'code' },
+  { text: '  # .claude/settings.json — expose to AI agents', tone: 'comment' },
+  { text: '  "mcpServers": {', tone: 'json' },
+  { text: '    "fleet": {', tone: 'json' },
+  { text: '      "command": "aster",', tone: 'json' },
+  { text: '      "args": ["mcp", "aster14Y5x...HXTE", "--allow", "Fleet.*"]', tone: 'json' },
+  { text: '  }}', tone: 'json' },
 ];
 
 const languages = [
@@ -184,7 +186,7 @@ const RIGHT_CURSOR = RIGHT_START + clientLines.length * S;
           <div class="m-term__scan" aria-hidden="true"></div>
           <div class="m-term-chrome">
             <div class="m-term-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-            <div class="m-term-title">aster / mcp agent</div>
+            <div class="m-term-title">aster / cli + mcp</div>
             <div class="m-term-status">connected</div>
           </div>
           <div class="m-term-body">
