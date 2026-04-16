@@ -26,14 +26,38 @@ const formattedDate = pubDate
       day: 'numeric',
     })
   : null;
+
+const siteUrl = 'https://aster.site';
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const blogJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  url: canonicalUrl,
+  ...(pubDate && { datePublished: pubDate }),
+  ...(hero && { image: new URL(hero, siteUrl).href }),
+  author: {
+    '@type': 'Person',
+    name: author,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Aster',
+    url: siteUrl,
+  },
+};
 ---
 
 <BaseLayout title={`${title} — Aster`} description={description}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(blogJsonLd)} />
+  </Fragment>
   <Header>
     <BrandMark slot="mark" />
   </Header>
 
-  <main class="post">
+  <main id="main-content" class="post">
     {hero && (
       <div class="hero-wrap">
         <div class="hero-shell">

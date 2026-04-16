@@ -40,7 +40,7 @@
   --cloud: #D9E1EA;
   --cloud-strong: #F2F6FA;
   --mist: #A5B3C2;
-  --mist-2: #8C98A6;
+  --mist-2: #95A1AE;
   --paper: #F4F7FA;
   --paper-2: #EBF0F5;
   --ink: #121A22;
@@ -203,4 +203,14 @@ img, svg { display: block; max-width: 100%; }
 }
 @media (max-width: 640px) {
   .shell { width: min(calc(100% - 20px), var(--max)); }
+}
+
+/* ── Accessibility: focus-visible ── */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--relay);
+  outline-offset: 3px;
+  border-radius: 4px;
 }

@@ -9,8 +9,23 @@ const {
   title = 'Aster — Machines authenticate to machines, on behalf of users.',
   description = 'Peer-to-peer RPC framework with identity in the connection. No DNS, no load balancer, no certificate authority, no OAuth proxy. Built on iroh QUIC, Apache Fory, and BLAKE3.',
 } = Astro.props;
-const siteUrl = 'https://aster.site/';
-const socialImage = `${siteUrl}aster-social-card.png`;
+const siteUrl = 'https://aster.site';
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const socialImage = `${siteUrl}/aster-social-card.png`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url: canonicalUrl,
+  image: socialImage,
+  publisher: {
+    '@type': 'Organization',
+    name: 'Aster',
+    url: siteUrl,
+  },
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -19,10 +34,12 @@ const socialImage = `${siteUrl}aster-social-card.png`;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="/aster-mark.svg" />
     <link rel="apple-touch-icon" href="/aster-mark.svg" />
+    <link rel="preload" as="font" type="font/ttf" href="/fonts/geist/Geist-VariableFont_wght.ttf" crossorigin />
 
     <meta name="theme-color" content="#0b0f14" />
 
@@ -30,7 +47,7 @@ const socialImage = `${siteUrl}aster-social-card.png`;
     <meta property="og:site_name" content="Aster" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={siteUrl} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={socialImage} />
     <meta property="og:image:alt" content="Aster — Peer-to-peer RPC framework" />
 
@@ -39,8 +56,31 @@ const socialImage = `${siteUrl}aster-social-card.png`;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content="Aster — Peer-to-peer RPC framework" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <slot name="head" />
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <slot />
   </body>
 </html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 16px;
+    z-index: 100;
+    padding: 12px 20px;
+    background: var(--relay);
+    color: var(--void);
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 0 0 8px 8px;
+    text-decoration: none;
+  }
+  .skip-link:focus {
+    top: 0;
+  }
+</style>
