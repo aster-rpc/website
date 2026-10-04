@@ -1,0 +1,56 @@
+---
+const service = `@service(name="Hello", version=1)
+class HelloService:
+    @rpc()
+    async def greet(self, req: HelloRequest) -> HelloResponse:
+        return HelloResponse(message=f"Hello, {req.name}!")`;
+const call = `$ aster call <peer-address> Hello.greet '{"name":"world"}'
+
+{
+  "message": "Hello, world!"
+}`;
+---
+<div class="example" data-call-example>
+  <div class="example-toolbar"><span>Illustrative excerpts · Python + CLI</span><button type="button" data-replay hidden>Replay</button></div>
+  <div class="terminals">
+    <div class="terminal"><div class="chrome"><span class="terminal-dot"></span>Service on machine B <span class="file">service.py</span></div><pre><code>{service}</code></pre></div>
+    <div class="terminal"><div class="chrome"><span class="terminal-dot"></span>Call from machine A <span class="file">shell</span></div><div class="transcript"><code>{call.split('\n').map((line, i) => <span class="output-line" style={`--delay: ${i * 140 + 300}ms`}>{line || '\u00a0'}</span>)}</code></div></div>
+  </div>
+  <p>Imports, types, and server setup are omitted here. Follow the <a href="https://docs.aster.site/docs/quickstart/python">complete quickstart</a> for runnable code.</p>
+</div>
+<style>
+  .example-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font: 12px var(--mono); color: var(--mist); }
+  button { border: 0; padding: 5px 0; background: none; color: var(--relay); cursor: pointer; font: inherit; }
+  .terminals { display: grid; grid-template-columns: 1.15fr 1fr; border: 1px solid #354253; border-radius: 10px; overflow: hidden; background: #0b1119; }
+  .terminal + .terminal { border-left: 1px solid #354253; }
+  .chrome { display: flex; gap: 8px; align-items: center; padding: 14px 20px; border-bottom: 1px solid #263140; font: 12px var(--mono); color: var(--cloud); }
+  .terminal-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--relay); }
+  .file { margin-left: auto; color: var(--mist); }
+  pre, .transcript { padding: 22px 20px; margin: 0; min-height: 185px; overflow-x: auto; color: #cfdfed; font: 12px/1.9 var(--mono); }
+  .terminal:first-child pre { color: #a9c7f6; }
+  .output-line { display: block; white-space: pre; }
+  .replaying .output-line { animation: reveal .35s both; animation-delay: var(--delay); }
+  p { margin: 16px 0 0; font-size: 13px; color: var(--mist); line-height: 1.6; }
+  a { color: var(--cloud); text-decoration: underline; text-underline-offset: 3px; }
+  @keyframes reveal { from { opacity: 0; } to { opacity: 1; } }
+  :global([data-motion-paused]) .output-line { animation: none; }
+  @media (prefers-reduced-motion: reduce) { .output-line { animation: none !important; } }
+  @media (max-width: 850px) { .terminals { grid-template-columns: 1fr; } .terminal + .terminal { border-left: 0; border-top: 1px solid #354253; } pre, .transcript { min-height: auto; font-size: 11px; } .file { display: none; } }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-call-example]').forEach((example) => {
+    const replay = example.querySelector<HTMLButtonElement>('[data-replay]');
+    if (!replay) return;
+    replay.hidden = false;
+    const play = () => {
+      example.classList.remove('replaying');
+      void example.offsetWidth;
+      example.classList.add('replaying');
+    };
+    replay.addEventListener('click', play);
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) { play(); observer.disconnect(); }
+    }, { threshold: .3 });
+    observer.observe(example);
+  });
+</script>

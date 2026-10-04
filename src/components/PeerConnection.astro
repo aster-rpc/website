@@ -1,0 +1,80 @@
+<figure class="connection" data-connection>
+  <div class="diagram-label"><span>Connection path</span><button type="button" data-path-toggle aria-pressed="false" hidden>Show relay path</button></div>
+  <svg viewBox="0 0 560 330" role="img" aria-labelledby="peer-title peer-description">
+    <title id="peer-title">Two peers connected directly or through a relay</title>
+    <desc id="peer-description">A laptop and a remote service each have a cryptographic identity. Aster attempts a direct encrypted connection. A relay can carry the encrypted connection when a direct path is unavailable.</desc>
+    <defs><pattern id="peer-grid" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#75849a" opacity=".18"/></pattern></defs>
+    <rect width="560" height="330" fill="url(#peer-grid)"/>
+    <path class="direct base" d="M130 132 H430"/>
+    <path class="direct flow" d="M130 132 H430"/>
+    <path class="relay base" d="M130 142 Q175 254 260 254 H300 Q385 254 430 142"/>
+    <path class="relay flow" d="M130 142 Q175 254 260 254 H300 Q385 254 430 142"/>
+    <text class="route-label direct" x="280" y="72">Direct encrypted connection</text>
+    <text class="route-label relay" x="280" y="213">Encrypted connection via relay</text>
+    <g class="aster-mark" transform="translate(280 132)" aria-hidden="true">
+      <circle class="mark-backdrop" r="44"/>
+      <polygon class="mark-diamond" points="0,-30 30,0 0,30 -30,0"/>
+      <polygon class="mark-square" points="21,-21 21,21 -21,21 -21,-21"/>
+      <circle class="mark-centre" r="5"/>
+      <text y="63">Aster</text>
+    </g>
+    <g class="peer" transform="translate(95 132)">
+      <rect x="-35" y="-35" width="70" height="70" rx="12"/>
+      <path d="M-18 -13 H18 V10 H-18 Z M-23 17 H23"/>
+      <text class="peer-name" y="65">Your machine</text><text class="identity" y="88">Identity A</text>
+    </g>
+    <g class="peer" transform="translate(465 132)">
+      <rect x="-35" y="-35" width="70" height="70" rx="12"/>
+      <path d="M-18 -19 H18 V-3 H-18 Z M-18 5 H18 V21 H-18 Z M-11 -11 H-8 M-11 13 H-8"/>
+      <text class="peer-name" y="65">Remote service</text><text class="identity" y="88">Identity B</text>
+    </g>
+    <g class="relay-node" transform="translate(280 254)"><rect x="-38" y="-21" width="76" height="42" rx="8"/><text y="5">Relay</text></g>
+  </svg>
+  <figcaption>Iroh tries a direct path and can fall back to a relay. Both peers still need network access.</figcaption>
+</figure>
+<style>
+  .connection { margin: 0; }
+  .diagram-label { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 34px; font: 12px var(--mono); color: var(--mist); }
+  button { font: inherit; color: var(--relay); background: none; border: 0; border-bottom: 1px solid #61d6c24d; padding: 5px 0; cursor: pointer; }
+  svg { width: 100%; overflow: visible; }
+  text { font-family: var(--sans); fill: var(--cloud); text-anchor: middle; font-size: 14px; }
+  .route-label { font-size: 12px; fill: var(--relay); }
+  .peer rect { fill: #151e29; stroke: #63758d; }
+  .peer path { fill: none; stroke: var(--cloud); stroke-width: 1.5; stroke-linecap: round; }
+  .peer-name { font-weight: 550; }
+  .identity { fill: var(--mist); font: 11px var(--mono); }
+  .base { fill: none; stroke: #354253; stroke-width: 2; }
+  .flow { fill: none; stroke: var(--relay); stroke-width: 2; stroke-dasharray: 5 35; animation: travel 3s linear infinite; }
+  .mark-backdrop { fill: #0e151e; stroke: #354253; stroke-width: 1; }
+  .aster-mark polygon { fill: none; stroke-linejoin: round; transform-origin: 0 0; }
+  .mark-diamond { stroke: var(--signal); stroke-width: 4; animation: mark-spin 14s linear infinite; }
+  .mark-square { stroke: var(--relay); stroke-width: 3; animation: mark-spin 18s linear infinite reverse; }
+  .mark-centre { fill: var(--trust); }
+  .aster-mark text { fill: var(--mist); font: 11px var(--mono); }
+  .relay { opacity: .25; }
+  .relay.flow, .relay.route-label { opacity: 0; }
+  .relay-node rect { fill: #141d27; stroke: #354253; }
+  .relay-node text { fill: var(--mist); font: 12px var(--mono); }
+  .connection.via-relay .direct { opacity: .16; }
+  .connection.via-relay .direct.flow, .connection.via-relay .direct.route-label { opacity: 0; }
+  .connection.via-relay .relay { opacity: 1; }
+  .connection.via-relay .relay-node rect { stroke: var(--relay); }
+  figcaption { max-width: 48ch; font-size: 13px; line-height: 1.6; color: var(--mist); }
+  @keyframes travel { to { stroke-dashoffset: -160; } }
+  @keyframes mark-spin { to { transform: rotate(360deg); } }
+  :global([data-motion-paused]) .flow,
+  :global([data-motion-paused]) .aster-mark polygon { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) { .flow, .aster-mark polygon { animation: none; } }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-connection]').forEach((diagram) => {
+    const button = diagram.querySelector<HTMLButtonElement>('[data-path-toggle]');
+    if (!button) return;
+    button.hidden = false;
+    button.addEventListener('click', () => {
+      const relay = diagram.classList.toggle('via-relay');
+      button.setAttribute('aria-pressed', String(relay));
+      button.textContent = relay ? 'Show direct path' : 'Show relay path';
+    });
+  });
+</script>
