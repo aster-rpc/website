@@ -68,7 +68,7 @@ const languages = [
     <section class="languages-section shell" aria-labelledby="languages-title">
       <div><p class="eyebrow">Language surfaces</p><h2 id="languages-title">Choose the API that fits your application.</h2><p>Rust is the first-class facade over Aster’s shared engine. Python, TypeScript, and the FFI bindings expose that foundation in their own runtime’s idioms.</p></div>
       <div class="language-list" aria-label="Languages covered by the release documentation">{languages.map((language) => (
-        <span class="language-item"><img src={`/languages/${language.logo}`} alt="" width="28" height="28" loading="lazy" decoding="async" />{language.name}</span>
+        <span class="language-item"><span class="language-logo"><img src={`/languages/${language.logo}`} alt="" width="28" height="28" loading="lazy" decoding="async" /></span>{language.name}</span>
       ))}</div>
       <p class="language-note">The next release will document each language’s installation, supported features, and platforms. The current <a href={docs}>documentation</a> covers the published entry points.</p>
     </section>
@@ -138,8 +138,11 @@ const languages = [
   .languages-section p { font-size: 15px; line-height: 1.75; color: var(--mist); }
   .language-list { display: flex; flex-wrap: wrap; gap: 15px 28px; margin: 30px 0 22px; font: 17px var(--mono); color: var(--cloud); }
   .language-item { display: inline-flex; align-items: center; gap: 10px; }
-  .language-item img { width: 28px; height: 28px; object-fit: contain; }
-  .language-item img[src$="java.png"] { width: 52px; }
+  .language-logo { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; flex: 0 0 28px; overflow: hidden; }
+  .language-logo img { width: 28px; height: 28px; object-fit: contain; }
+  /* The official Java asset includes a wordmark; show its cup in the common icon slot. */
+  .language-logo:has(img[src$="java.png"]) { justify-content: flex-start; }
+  .language-logo img[src$="java.png"] { width: 53px; max-width: none; flex-shrink: 0; clip-path: inset(0 32px 0 0); transform: translateX(4px); }
   .languages-section .language-note { font-size: 13px; max-width: 85ch; }
   .language-note a { text-decoration: underline; text-underline-offset: 3px; color: var(--cloud); }
   .closing { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding-top: 48px; padding-bottom: 48px; border-top: 1px solid #a5b3c22f; }
