@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://aster.site/sitemap.xml
+Sitemap: https://sdk.getaster.now/sitemap-index.xml

@@ -16,7 +16,7 @@ const call = `$ aster call <peer-address> Hello.greet '{"name":"world"}'
     <div class="terminal"><div class="chrome"><span class="terminal-dot"></span>Service on machine B <span class="file">service.py</span></div><pre><code>{service}</code></pre></div>
     <div class="terminal"><div class="chrome"><span class="terminal-dot"></span>Call from machine A <span class="file">shell</span></div><div class="transcript"><code>{call.split('\n').map((line, i) => <span class="output-line" style={`--delay: ${i * 140 + 300}ms`}>{line || '\u00a0'}</span>)}</code></div></div>
   </div>
-  <p>Imports, types, and server setup are omitted here. Follow the <a href="https://docs.aster.site/docs/quickstart/python">complete quickstart</a> for runnable code.</p>
+  <p>Imports, types, and server setup are omitted here. Follow the <a href="https://sdk.getaster.now/docs/quickstart/python">complete quickstart</a> for runnable code.</p>
 </div>
 <style>
   .example-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font: 12px var(--mono); color: var(--mist); }

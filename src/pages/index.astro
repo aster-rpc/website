@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import BrandMark from '../components/BrandMark.astro';
 import PeerConnection from '../components/PeerConnection.astro';
 import CallExample from '../components/CallExample.astro';
-const docs = 'https://docs.aster.site';
+const docs = 'https://sdk.getaster.now';
 const year = new Date().getFullYear();
 const languages = [
   { name: 'Rust', logo: 'rust.svg' },
@@ -18,7 +18,7 @@ const languages = [
 <BaseLayout title="Aster — Connect services across machines" description="Enterprise peer-to-peer application SDK. Typed RPC, cryptographic peer identity, and scoped access over Iroh.">
   <header class="site-header shell">
     <a class="wordmark" href="/" aria-label="Aster home"><BrandMark />Aster</a>
-    <nav aria-label="Primary"><a href="#examples">Examples</a><a href={`${docs}/docs/overview/what-is-aster`}>How it works</a><a href="/blog">Blog</a><a href={docs}>Docs <span aria-hidden="true">↗</span></a><a href="https://github.com/aster-rpc/aster-rpc">GitHub <span aria-hidden="true">↗</span></a></nav>
+    <nav aria-label="Primary"><a href="#examples">Examples</a><a href={`${docs}/docs/overview/what-is-aster`}>How it works</a><a href="/blog">Blog</a><a href={`${docs}/docs/`}>Docs <span aria-hidden="true">↗</span></a><a href="https://github.com/aster-rpc/aster-rpc">GitHub <span aria-hidden="true">↗</span></a></nav>
   </header>
   <main id="main-content">
     <section class="intro shell" aria-labelledby="intro-title">
@@ -70,7 +70,7 @@ const languages = [
       <div class="language-list" aria-label="Languages covered by the release documentation">{languages.map((language) => (
         <span class="language-item"><span class="language-logo"><img src={`/languages/${language.logo}`} alt="" width="28" height="28" loading="lazy" decoding="async" /></span>{language.name}</span>
       ))}</div>
-      <p class="language-note">The next release will document each language’s installation, supported features, and platforms. The current <a href={docs}>documentation</a> covers the published entry points.</p>
+      <p class="language-note">The next release will document each language’s installation, supported features, and platforms. The current <a href={`${docs}/docs/`}>documentation</a> covers the published entry points.</p>
     </section>
 
     <section class="closing shell"><div><h2>Try a call between two machines.</h2><p>Start with the quickstart, then add the pieces your application needs.</p></div><a class="start-link" href={`${docs}/docs/quickstart/python`}>Open the quickstart <span aria-hidden="true">→</span></a></section>

@@ -25,3 +25,6 @@ pnpm-debug.log*
 _private/
 .clinerules/
 !.gitignore
+# Combined site build staging
+.build/
+.wrangler/

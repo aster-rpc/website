@@ -4,6 +4,6 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://aster.site',
+  site: 'https://sdk.getaster.now',
   integrations: [sitemap()],
 });
