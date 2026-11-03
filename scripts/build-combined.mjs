@@ -1,3 +1,4 @@
+import { instrumentDirectory } from './analytics/publish.mjs';
 import { spawnSync } from 'node:child_process';
 import { readdir, readFile, writeFile, mkdir, rm, copyFile, rename } from 'node:fs/promises';
 import { resolve, dirname, relative } from 'node:path';
@@ -59,6 +60,7 @@ const sitemaps = [...sources.keys()].filter(path => /^(landing|docs)-sitemap-\d+
 if (sitemaps.length < 2) throw new Error('Both builds must provide sitemaps');
 await writeFile(resolve(staging, 'sitemap-index.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemaps.map(path => `<sitemap><loc>${origin}/${path}</loc></sitemap>`).join('')}</sitemapindex>\n`);
 await writeFile(resolve(staging, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap-index.xml\n`);
+await instrumentDirectory(staging);
 // Publish the assembled directory only after all collision and route checks pass.
 await rm(output, { recursive: true, force: true });
 await rename(staging, output);
