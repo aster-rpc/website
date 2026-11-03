@@ -18,11 +18,11 @@ The site should explain Aster as an identity-first distributed systems substrate
 
 ## Routes
 
-- `/` landing
-- `/blog/` and authored blog posts
-- `/docs/` and existing documentation routes
-- `/api/python/` and `/api/typescript/`
-- `/go/` Go module discovery
+- `/` — SDK landing
+- `/blog/` — blog and posts
+- `/docs/` — documentation
+- `/api/` — generated API references
+- `/go/` — Go discovery metadata
 
 ## Stack
 
@@ -107,3 +107,5 @@ The workflow resolves the docs `main` SHA, checks out that exact revision alongs
 Configure repository secret `CLOUDFLARE_API_TOKEN` and repository variable `CLOUDFLARE_ACCOUNT_ID` before CI publication. The Cloudflare token is passed only to the deploy step; missing configuration fails before dependency installation and building. A local Wrangler OAuth login does not configure the CI token. The token needs permission to deploy Workers and manage the custom domain in the `getaster.now` zone.
 
 `wrangler.jsonc` deploys worker `aster-sdk` on `sdk.getaster.now`, uses `dist/` static assets with the generated 404 page, and disables workers.dev and preview URLs. Concurrent publisher runs are serialized. GitHub Pages is no longer the deployment target.
+
+The verified publishing, credentials and recovery runbook is [DEPLOYMENT.md](DEPLOYMENT.md).
